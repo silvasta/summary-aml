@@ -1,0 +1,90 @@
+
+%-----------------------------------------------------------------
+% two boxes centered with date below
+%-----------------------------------------------------------------
+
+\begin{tcolorbox}[
+		colback=RoyalBlue,
+		colframe=RoyalBlue,
+		arc=0mm,
+		% boxrule=0mm,
+		left=0pt,
+		right=0pt,
+		bottom=5pt,
+		top=5pt,
+		beforeafter skip=0mm
+	]
+	\center\textbf{\Large\color{white}
+		Advanced Machine Learning
+	}\end{tcolorbox}
+
+\begin{tcolorbox}[
+		colback=lightgray,
+		colframe=lightgray,
+		arc=0mm,
+		% boxrule=.5mm,
+		left=0pt,
+		bottom=1mm,
+		right=0mm,
+		top=1mm,
+		beforeafter skip=0.5mm
+	]
+	\center{\normalsize
+		\textbf{Silvan Stadelmann}
+		- \selectlanguage{german}{\today}
+		\color{white}
+		- v0.0.1
+	}\end{tcolorbox}
+
+
+\begin{center}
+	% TODO: git for aml
+	{\scriptsize\url{github.com/silvasta/summary-aml}}
+\end{center}
+
+% \begin{adjustbox}{rndcorners=0.5mm,width=71.5mm,height=40mm}
+\begin{adjustbox}{rndcorners=0.5mm,width=71.5mm}
+	\begin{tikzpicture}
+		\node[anchor=south west, inner sep=0]
+		(image) at (0,0) {\includegraphics[width=\columnwidth]{title/center-cristal.jpg}};
+		\begin{scope}[x={(image.south east)},y={(image.north west)}]
+			\node[anchor = south west, white, font=\tiny\robotomono]
+			at (-.5mm,-.5mm) {created with grok}; % Adjust position and style of the text here
+		\end{scope}
+	\end{tikzpicture}
+\end{adjustbox}
+
+
+% \begin{adjustbox}{rndcorners=0.5mm,width=71.5mm}
+% 	\begin{tikzpicture}
+% 		\node[anchor=south west, inner sep=0]
+% 		(image) at (0,0) {\includegraphics[width=\columnwidth]{title/lines.jpg}};
+% 		\begin{scope}[x={(image.south east)},y={(image.north west)}]
+% 			\node[anchor = south west, white, font=\tiny\robotomono]
+% 			at (-.5mm,-.5mm) {created with grok}; % Adjust position and style of the text here
+% 		\end{scope}
+% 	\end{tikzpicture}
+% \end{adjustbox}
+
+
+% \begin{adjustbox}{rndcorners=0.5mm,width=71.5mm}
+% 	\begin{tikzpicture}
+% 		\node[anchor=south west, inner sep=0]
+% 		(image) at (0,0) {\includegraphics[width=\columnwidth]{title/center-bubbles.jpg}};
+% 		\begin{scope}[x={(image.south east)},y={(image.north west)}]
+% 			\node[anchor = south west, white, font=\tiny\robotomono]
+% 			at (-.5mm,-.5mm) {created with grok}; % Adjust position and style of the text here
+% 		\end{scope}
+% 	\end{tikzpicture}
+% \end{adjustbox}
+
+% \begin{adjustbox}{rndcorners=0.5mm,width=71.5mm}
+% 	\begin{tikzpicture}
+% 		\node[anchor=south west, inner sep=0]
+% 		(image) at (0,0) {\includegraphics[width=\columnwidth]{title/slight.jpg}};
+% 		\begin{scope}[x={(image.south east)},y={(image.north west)}]
+% 			\node[anchor = south west, white, font=\tiny\robotomono]
+% 			at (-.5mm,-.5mm) {created with grok}; % Adjust position and style of the text here
+% 		\end{scope}
+% 	\end{tikzpicture}
+% \end{adjustbox}

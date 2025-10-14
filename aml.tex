@@ -1,0 +1,44 @@
+% Needed  for babelfont
+%! TeX program = lualatex
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+% Document Type
+%-----------------------------------------------------------------
+% \documentclass[secnumdepth=2]{sst-custom}
+% \documentclass[layout=summary, columns=4,secnumdepth=2,tight]{sst-custom}
+\documentclass[layout=preview,secnumdepth=2,tight]{sst-custom}
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+% experimental
+	%----------------------------------------------------------------
+% \usepackage{setspace}
+%--------------\--------------------------------------------------
+\begin{document}
+
+\iftoggle{do-multicol}{ \begin{multicols*}{\numcolumns}}{}
+		%-----------------------------------------------------------------
+		% %%% Debug
+		% Column width is: \the\columnwidth\\
+		% Preview width is: \the\previewwidth
+		%-----------------------------------------------------------------
+		\input{title/title-blue-grey.tex}
+		%-----------------------------------------------------------------
+		\iftoggle{use-small-font}{\footnotesize}{}
+		%-----------------------------------------------------------------
+		\tableofcontents
+		%-----------------------------------------------------------------
+
+		% WARN: check some structure in eth-notes summary-md branch
+
+		%-----------------------------------------------------------------
+		\section{C1}
+		\input{topics/TOPIC.tex}
+		%-----------------------------------------------------------------
+		\section{C2}
+		\input{topics/TOPIC.tex}
+		%-----------------------------------------------------------------
+		\iftoggle{do-multicol}{\end{multicols*}}{}
+
+\end{document}
