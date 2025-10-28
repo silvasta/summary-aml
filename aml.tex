@@ -7,7 +7,7 @@
 %-----------------------------------------------------------------
 % \documentclass[secnumdepth=2]{sst-custom}
 % \documentclass[layout=summary, columns=4,secnumdepth=2,tight]{sst-custom}
-\documentclass[layout=preview,secnumdepth=2,tight]{sst-custom}
+\documentclass[layout=preview,secnumdepth=3,tight]{sst-custom}
 %-----------------------------------------------------------------
 
 %-----------------------------------------------------------------
@@ -30,16 +30,29 @@
 		\tableofcontents
 		%-----------------------------------------------------------------
 
-		% WARN: check some structure in eth-notes summary-md branch
+		%-----------------------------------------------------------------
+		\chapter{Representation}
+		\input{topics/representation.tex}
 
+		\chapter{Regression}
+		\input{topics/regression.tex}
+		\input{topics/ensemble-methods-for-classifier-design.tex}
+		\input{topics/random-forrest-as-classifier.tex}
+		\input{topics/gaussian-processes-for-regression.tex}
+		\input{topics/kernelized-polynomial-regression.tex}
+
+		\chapter{Support Vector Machines}
+		\input{topics/convex-optimization.tex}
+		\input{topics/support-vector-machines.tex}
+
+		\chapter{Neural Networks}
+		\input{topics/neural-networks.tex}
+
+		\chapter{Transformer}
+		\input{topics/transformer.tex}
 		%-----------------------------------------------------------------
-		\section{C1}
-		\input{topics/TOPIC.tex}
-		\input{topics/exercise-1.tex}
-		\
-		%-----------------------------------------------------------------
-		\section{C2}
-		\input{topics/TOPIC.tex}
+		\chapter{Exercises}
+		\input{exercise/e1.tex}
 		%-----------------------------------------------------------------
 		\iftoggle{do-multicol}{\end{multicols*}}{}
 

@@ -1,0 +1,89 @@
+\section{Learning objectives}
+
+% TODO: Learning objectives
+
+Estimation of Dependences Based on Empirical Data
+
+What is the learning problem?
+
+\[
+	y = f_\theta(x) + \eta
+	\quad\text{with}\quad
+	\nu \sim\mathrm{P}(\eta|0,\sigma^{2})
+\]
+
+\section{Expected risk}
+
+- Conditional expected risk
+% AI: formula
+
+- Total expected risk
+% AI: formula
+
+\section{Empirical risk}
+
+- Test and Train Data
+
+Test data cannot be used before the final estimator has been selected!
+
+Training error $\hat{R}\hat(f_n,\mathcal{Z}^\text{train})$
+for Empirical Risk Minimizer (ERM) $\hat{f}_n$
+
+%AI: formula ERM
+
+%AI: select ERM s.t. f \in XXX
+
+\section{Empirical test error and expected risk}
+
+Distinguish
+
+%AI: explain difference
+
+\section{Comparing algorithm performance on test data}
+
+% TODO: comparison criteria
+
+\section{Data} %HACK: higher level titel
+
+\subsection{Feature space}
+
+- Measurement space $\mathcal{X}$
+
++ numerical $\mathcal{X}\subset \mathbb{R}^{d}$
+
++ boolean $\mathcal{X} = \mathbb{B}$
+
++ categorial $\mathcal{X} = \{1,...,k\}$
+
+\textbf{Features}
+are derived quantities or indirect observations which often
+significantly compress the information content of measurements.
+
+\textbf{Remark}
+The selection of a specific feature space predetermines the metric to
+compare data; this choice is the first significant design decision in a
+machine learning system.
+
+\textbf{Taxonomy of Data}
+
+% AI: explain, something like pattern analysis
+
+\subsection{Example of Data}
+
+- monadic data
+
+- dyadic data
+
+- pairwise data
+
+- polyadic data
+
+\section{Mathematical Spaces}
+
+- Topological spaces
+
+- Metric space
+
+- Euclidean vector spaces
+
+- Probability Spaces
