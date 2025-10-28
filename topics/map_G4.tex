@@ -1,0 +1,54 @@
+\section{Bayesian Maximum A Posteriori (MAP) Estimates}
+
+\subsection{Ridge Regression}
+
+\begin{itemize}
+	\item \textbf{Cost function}: The Ridge regression cost function adds an L2 regularization term to the mean squared error (MSE) to penalize large weights and prevent overfitting:
+	      \[
+		      J(\theta) = \frac{1}{2m} \sum_{i=1}^m (h_\theta(x^{(i)}) - y^{(i)})^2 + \frac{\lambda}{2} \sum_{j=1}^n \theta_j^2
+	      \]
+	      where \( m \) is the number of training examples, \( n \) is the number of features, \( \lambda \) is the regularization parameter, and \( h_\theta(x) = \theta^T x \).
+
+	\item \textbf{Bayesian view}: Ridge regression corresponds to MAP estimation under a Gaussian prior on the parameters \( \theta \sim \mathcal{N}(0, \frac{1}{\lambda} I) \) and Gaussian likelihood \( p(y | x, \theta) \sim \mathcal{N}(\theta^T x, \sigma^2) \). The posterior is:
+	      \[
+		      p(\theta | X, y) \propto p(y | X, \theta) p(\theta) = \exp\left( -\frac{1}{2\sigma^2} \| y - X\theta \|^2 - \frac{\lambda}{2} \| \theta \|^2 \right).
+	      \]
+	      Maximizing the log-posterior yields the Ridge cost function.
+
+	\item \textbf{Solution}: The closed-form solution is obtained by setting the gradient of \( J(\theta) \) to zero:
+	      \[
+		      \hat{\theta} = (X^T X + \lambda I)^{-1} X^T y,
+	      \]
+	      where \( X \) is the design matrix and \( I \) is the identity matrix (excluding bias term if applicable).
+\end{itemize}
+
+\textbf{Tikhonov regularization}: A generalization of Ridge regression for ill-posed problems, minimizing \( \| A\theta - b \|^2 + \| \Gamma \theta \|^2 \), where \( \Gamma = \sqrt{\lambda} I \) in the standard case. It stabilizes inversion by adding a penalty matrix; equivalent to Ridge when \( \Gamma \) is diagonal.
+
+\subsection{LASSO}
+
+\begin{itemize}
+	\item \textbf{Cost function}: LASSO uses L1 regularization to encourage sparsity:
+	      \[
+		      J(\theta) = \frac{1}{2m} \sum_{i=1}^m (h_\theta(x^{(i)}) - y^{(i)})^2 + \lambda \sum_{j=1}^n |\theta_j|,
+	      \]
+	      where the absolute value promotes some \( \theta_j = 0 \).
+
+	\item \textbf{Bayesian view}: LASSO corresponds to MAP with a Laplace prior on parameters \( \theta_j \sim \text{Laplace}(0, \frac{1}{\lambda}) \), i.e., \( p(\theta_j) \propto \exp(-\lambda |\theta_j|) \), and Gaussian likelihood. The posterior is:
+	      \[
+		      p(\theta | X, y) \propto \exp\left( -\frac{1}{2\sigma^2} \| y - X\theta \|^2 - \lambda \| \theta \|_1 \right).
+	      \]
+
+	\item \textbf{Solution}: No closed-form solution due to non-differentiability at zero. Use optimization methods like coordinate descent or proximal gradient descent. For example, the soft-thresholding operator in proximal methods is:
+	      \[
+		      \theta_j \leftarrow S_{\lambda \eta}(\tilde{\theta}_j) = \begin{cases}
+			      \tilde{\theta}_j - \lambda \eta & \tilde{\theta}_j > \lambda \eta      \\
+			      0                               & |\tilde{\theta}_j| \leq \lambda \eta \\
+			      \tilde{\theta}_j + \lambda \eta & \tilde{\theta}_j < -\lambda \eta
+		      \end{cases},
+	      \]
+	      where \( \tilde{\theta} \) is an intermediate estimate and \( \eta \) is the step size.
+\end{itemize}
+
+\subsection{Ridge vs. LASSO Estimation}
+
+Ridge (L2) shrinks all coefficients towards zero without setting any to exactly zero, useful for multicollinearity but not feature selection. LASSO (L1) can set coefficients to zero, enabling sparsity and automatic feature selection, but may be unstable with correlated features. Both are MAP estimates: Gaussian prior for Ridge (smooth shrinkage) vs. Laplace for LASSO (spike at zero).

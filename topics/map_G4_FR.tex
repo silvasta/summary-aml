@@ -1,0 +1,50 @@
+\section{Bayesian Maximum A Posteriori (MAP) estimates}
+
+\subsection{Ridge Regression}
+
+\subsubsection{Cost function}
+The Ridge regression cost function minimizes the least squares error with an $\ell_2$ penalty on the weights:
+\[
+	J(\mathbf{w}) = \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2,
+\]
+where $\lambda > 0$ controls the regularization strength. This prevents overfitting by shrinking coefficients toward zero without eliminating them.
+
+\subsubsection{Bayesian view}
+In the Bayesian framework, assume a Gaussian prior on the weights: $\mathbf{w} \sim \mathcal{N}(\mathbf{0}, (\lambda \mathbf{I})^{-1})$. The likelihood is Gaussian: $p(\mathbf{y}|\mathbf{X}, \mathbf{w}) = \mathcal{N}(\mathbf{X}\mathbf{w}, \mathbf{I})$. The MAP estimate maximizes the posterior $p(\mathbf{w}|\mathbf{y}, \mathbf{X}) \propto p(\mathbf{y}|\mathbf{X}, \mathbf{w}) p(\mathbf{w})$, which yields the Ridge objective (up to constants).
+
+\subsubsection{Solution}
+The closed-form solution is obtained by setting the derivative of $J(\mathbf{w})$ to zero:
+\[
+	\mathbf{w}_{\text{Ridge}} = (\mathbf{X}^\top \mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}^\top \mathbf{y}.
+\]
+This is numerically stable via matrix inversion or SVD; use for direct implementation in engineering pipelines (e.g., via NumPy's `linalg.solve`).
+
+Tikhonov regularization is synonymous with Ridge regression, referring to the same form:
+\[
+	\mathbf{w} = \arg\min_{\mathbf{w}} \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2.
+\]
+It originates from ill-posed inverse problems, stabilizing solutions by damping small eigenvalues.
+
+\subsection{LASSO}
+
+\subsubsection{Cost function}
+The LASSO (Least Absolute Shrinkage and Selection Operator) cost function adds an $\ell_1$ penalty:
+\[
+	J(\mathbf{w}) = \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_1,
+\]
+where $\lambda > 0$ promotes sparsity by driving irrelevant coefficients to exactly zero, enabling feature selection.
+
+\subsubsection{Bayesian view}
+Assume a Laplace prior on the weights: $\mathbf{w} \sim \text{Laplace}(\mathbf{0}, b)$, with density $p(w_j) = \frac{1}{2b} \exp(-|w_j|/b)$. The likelihood remains Gaussian. The MAP estimate maximizes the posterior, leading to the LASSO objective, as the Laplace prior induces the $\ell_1$ penalty (sparsity via geometric tails).
+
+\subsubsection{Solution}
+No closed-form solution exists due to the non-differentiable $\ell_1$ term. Use iterative methods like coordinate descent (e.g., scikit-learn's implementation) or proximal gradient descent:
+\[
+	\mathbf{w}^{(t+1)} = \text{soft-threshold}(\mathbf{w}^{(t)} - \eta \nabla \|\mathbf{y} - \mathbf{X}\mathbf{w}^{(t)}\|_2^2, \lambda \eta),
+\]
+where soft-thresholding is $\text{ST}(z, \tau) = \text{sign}(z) \max(|z| - \tau, 0)$. Converges quickly for high-dimensional data; engineer tip: set $\lambda$ via cross-validation.
+
+\subsection{Ridge vs. LASSO Estimation}
+
+Ridge uses $\ell_2$ regularization, shrinking all coefficients proportionally (no sparsity, handles multicollinearity well, closed-form solution). LASSO uses $\ell_1$, inducing sparsity (feature selection, but unstable with correlated features, no closed form). Choose Ridge for prediction stability, LASSO for interpretability; Elastic Net combines both for correlated high-dimensional data.
+```
