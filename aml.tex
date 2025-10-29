@@ -12,54 +12,57 @@
 
 %-----------------------------------------------------------------
 % experimental
-	%----------------------------------------------------------------
+%----------------------------------------------------------------
 % \usepackage{setspace}
 %--------------\--------------------------------------------------
 \begin{document}
 
-\iftoggle{do-multicol}{ \begin{multicols*}{\numcolumns}}{}
-		%-----------------------------------------------------------------
-		% %%% Debug
-		% Column width is: \the\columnwidth\\
-		% Preview width is: \the\previewwidth
-		%-----------------------------------------------------------------
-		\input{title/title-blue-grey.tex}
-		%-----------------------------------------------------------------
-		\iftoggle{use-small-font}{\footnotesize}{}
-		%-----------------------------------------------------------------
-		\tableofcontents
-		%-----------------------------------------------------------------
+\iftoggle{do-multicol}{
+\begin{multicols*}{\numcolumns}}{}
+  %-----------------------------------------------------------------
+  % %%% Debug
+  % Column width is: \the\columnwidth\\
+  % Preview width is: \the\previewwidth
+  %-----------------------------------------------------------------
+  \input{title/title-blue-grey.tex}
+  %-----------------------------------------------------------------
+  \iftoggle{use-small-font}{\footnotesize}{}
+  %-----------------------------------------------------------------
+  \tableofcontents
+  %-----------------------------------------------------------------
 
-		%-----------------------------------------------------------------
-		\chapter{Representation}
-		\input{topics/representation.tex}
+  %-----------------------------------------------------------------
+  \chapter{Representation}
+  \input{topics/representation.tex}
 
-		\chapter{Regression}
-		\input{topics/regression.tex}
-		% WARN: check map.tex (from grok) and merge in above
-		% \newline
-		% \input{topics/map_G4.tex}
-		% \newline
-		% \input{topics/map_G4_FR.tex}
-		% -- -- - -- --
-		\input{topics/ensemble-methods-for-classifier-design.tex}
-		\input{topics/random-forrest-as-classifier.tex}
-		\input{topics/gaussian-processes-for-regression.tex}
-		\input{topics/kernelized-polynomial-regression.tex}
+  \chapter{Regression}
+  \input{topics/regression.tex}
+  % WARN: check map.tex (from grok) and merge in above
+  % \newline
+  % \input{topics/map_G4.tex}
+  % \newline
+  % \input{topics/map_G4_FR.tex}
+  % -- -- - -- --
+  \input{topics/ensemble-methods-for-classifier-design.tex}
+  \input{topics/random-forrest-as-classifier.tex}
+  \input{topics/gaussian-processes-for-regression.tex}
+  \input{topics/kernelized-polynomial-regression.tex}
 
-		\chapter{Support Vector Machines}
-		\input{topics/convex-optimization.tex}
-		\input{topics/support-vector-machines.tex}
+  \chapter{Support Vector Machines}
+  \input{topics/convex-optimization.tex}
+  \input{topics/support-vector-machines.tex}
 
-		\chapter{Neural Networks}
-		\input{topics/neural-networks.tex}
+  \chapter{Neural Networks}
+  \input{topics/neural-networks.tex}
 
-		\chapter{Transformer}
-		\input{topics/transformer.tex}
-		%-----------------------------------------------------------------
-		\chapter{Exercises}
-		\input{exercise/e1.tex}
-		%-----------------------------------------------------------------
-		\iftoggle{do-multicol}{\end{multicols*}}{}
+  \chapter{Transformer}
+  \input{topics/transformer.tex}
+  %-----------------------------------------------------------------
+  \chapter{Exercises}
+  \input{exercise/e1.tex}
+  %-----------------------------------------------------------------
+  \iftoggle{do-multicol}{
+\end{multicols*}}{}
 
 \end{document}
+
