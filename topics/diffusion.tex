@@ -1,0 +1,155 @@
+
+Lecture 8, 03.11.25
+
+Diffusion (to produce images)
+
+- goal find $p^\star$
+
+- Start  with gaussian distribution
+
+- generative process, from noise to image
+
+- corruptive process, from image sample to noise
+
+Training
+
+corruptive process
+
+x(i) image
+
+$e_t(i) \to x_t(i)$
+
+up to the middle / noise
+
+reverse process
+
+from noise to image
+
+Diffusion process for MNIST
+
+\subsection{sgrok}
+
+Diffusion Models for Image Generation
+
+Diffusion models are a class of generative models aimed at producing
+images by learning to approximate the true data distribution $
+p^\star $. The core idea involves two complementary processes: a
+**corruptive process** that gradually adds noise to an image,
+transforming it into pure Gaussian noise, and a **reverse process**
+that denoises the noise back to a realistic image.
+
+Corruptive Process (Forward Diffusion)
+Starting from a clean image sample $ x_0(i) $ (e.g., a digit from
+the MNIST dataset), the corruptive process applies a sequence of
+noise additions over $ T $ timesteps:
+\[
+  x_t(i) = \sqrt{\alpha_t} x_{t-1}(i) + \sqrt{1 - \alpha_t}
+  \epsilon_t(i), \quad \epsilon_t(i) \sim \mathcal{N}(0, I),
+\]
+where $ \alpha_t $ controls the noise level, and $ \epsilon_t(i)
+$ is Gaussian noise. This continues until $ x_T(i) $ approximates
+a standard Gaussian distribution (pure noise) at timestep $ T $,
+effectively destroying the image structure.
+
+Training
+During training, the model learns to reverse this corruption. A
+neural network (e.g., a U-Net) is trained to predict the noise $
+\epsilon_t(i) $ added at each timestep $ t $, given the noisy
+image $ x_t(i) $. The objective is to minimize the difference
+between predicted and actual noise, often using a mean-squared error
+loss. This allows the model to capture the data distribution by
+simulating the forward process on training samples (like MNIST
+digits) and optimizing the reverse denoising steps.
+
+Generative Process (Reverse Diffusion)
+For generation, start with a sample from a Gaussian distribution
+(pure noise) $ x_T \sim \mathcal{N}(0, I) $. The trained model
+iteratively denoises it via the reverse process:
+\[
+  x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{1 -
+  \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \hat{\epsilon}_t(x_t) \right)
+  + \sigma_t z, \quad z \sim \mathcal{N}(0, I),
+\]
+where $ \hat{\epsilon}_t $ is the model's noise prediction, and $
+\bar{\alpha}_t = \prod_{s=1}^t \alpha_s $. Over $ T $ steps, this
+transforms noise into a high-fidelity image, such as a synthetic MNIST digit.
+
+This framework, as in Denoising Diffusion Probabilistic Models
+(DDPM), excels in tasks like image synthesis due to its stable
+training and high-quality outputs. For implementation, engineers can
+use libraries like Diffusers (Hugging Face) with pre-trained models
+for MNIST or extend to advanced variants like Stable Diffusion for
+conditional generation.
+
+\subsection{Encoder}
+
+Autoencoder
+
+\subsubsection{Clip}
+
+- encode image and text
+
+- match them somehow
+
+- produce like diagonal matrix
+
+\subsection{Pipeline}
+
+Goal: text to image
+
+Idea:
+
+- produce text and image embeddings that are semantically relatable
+
+- text -> produce embedding -> generative model -> image
+
+\subsubsection{details}
+
+% TODO: section cross attention
+- cross attention
+
+\subsection{Unet Architecture}
+
+prompt -> encoder -> embeding-text
+
+image -> encoder ->et -> corrupted image xt
+
+xt -> unet (only image input), now?
+
+add text with cross-attention inbetween UNet steps
+
+\subsubsection{Multi-headed X Attention Mechanism}
+
+embeding-text (Batch,MaxTokens,DimEmbeddings)
+
+embeding-image (Batch,Chanels, Heigth, Width)
+
+% TODO: dimension calculation
+
+wK,wV to Et, gives K(B,F,M,Dk),V(B,F,M,Dv)
+
+wQ to Ei, gives Q
+
+- calculate similarities
+
+use K,Q to create P(B,F,M,H,W)
+
+- P = similarity of token m in text and pixel (h,w) of image
+
+create S, softmax of P (along dimension M)
+
+Create A(B,F,Dv,H,W) from S and V
+
+use wO(Do,H,W) to create output Ao(B,Do,H,W)
+
+% MOVE: own chapter
+\section{Graph}
+
+Toxic, non toxic? structure matters -> graph
+
+G(V,E)
+
+V={1,...,N}
+
+$E c= V\times V$
+
