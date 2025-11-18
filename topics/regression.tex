@@ -1,17 +1,24 @@
 \section{Linear Regression}
 
+% HACK: check map.tex (from grok) and merge here
+% \newline
+% \input{topics/map_G4.tex}
+% \newline
+% \input{topics/map_G4_FR.tex}
+
 - Statistical model
 
 \[
-	Y=X^{\mathsf{T}}\beta.\ \ \ \ Y\in\mathbb{R}.\ X.\beta\in\mathbb{R}^{d+1}
+  Y=X^{\mathsf{T}}\beta.\ \ \ \ Y\in\mathbb{R}.\ X.\beta\in\mathbb{R}^{d+1}
 \]
 - Residual Sum of Squares (RSS)
 
 \[
-	R S S(\beta)\;=\;({\bf y}-{\bf X}\beta)^{\mathsf{T}}({\mathbf y}-{\mathbf X}\beta)
+  R S S(\beta)\;=\;({\bf y}-{\bf X}\beta)^{\mathsf{T}}({\mathbf
+  y}-{\mathbf X}\beta)
 \]
 \[
-	{\hat{\boldsymbol{\beta}}}=(\mathbf{X}^{\mathsf{T}}\mathbf{X})^{-1}\mathbf{X}^{\mathsf{T}}\mathbf{y}
+  {\hat{\boldsymbol{\beta}}}=(\mathbf{X}^{\mathsf{T}}\mathbf{X})^{-1}\mathbf{X}^{\mathsf{T}}\mathbf{y}
 \]
 
 % AI: write above cleaner
@@ -32,7 +39,7 @@
 
 \subsection{Ridge Regression}
 
-% AI: formulas to all points 
+% AI: formulas to all points
 - Cost function
 
 - Bayesian view
@@ -44,7 +51,7 @@ Tikhonov regularization
 
 \subsection{LASSO}
 
-% AI: formulas to all points 
+% AI: formulas to all points
 - Cost function
 
 - Bayesian view
@@ -66,3 +73,4 @@ When white noise is added to the data then all Fourier
 coefficients are increased by a constant on average.
 ⇒ Shrink all coefficients by the estimated noise
 amount to derive a robust predictor.
+
