@@ -1,0 +1,173 @@
+\section{Data, measurements, and representations}
+
+% \subsection{Four paradigms in data science}
+%
+% Frequentism
+%
+% 1. Pick a parametric model
+% 2. Fit the model using MLE
+%
+% + Tractable
+% + Asymptotically unbiased
+% - Variance issues
+%
+% Bayesianism
+%
+% 1. Guess a prior
+% 2. Pick a parametric model
+% 3. Derive a posterior
+%
+% + Low variance
+% - Intractable
+% - Bias issues
+%
+% Statistical learning
+%
+% 1. Forget about distributions!
+% 2. Define a loss function
+% 3. Approximately minimize the expected loss
+%
+% + Tractable
+% + Low bias and variance with proper model
+% - model selection problem
+%
+% Non-parametric statistics
+%
+% 1. Forget about distributions!
+% 2. Generate multiple samples from your data
+% 3. Produce estimates from these samples
+%
+% + Low bias and variance
+% - Highly intractable
+
+\subsection{Four Paradigms in Data Science}
+
+\subsubsection{Frequentism}
+
+\begin{enumerate}
+  \item Pick a parametric model.
+  \item Fit the model using maximum likelihood estimation (MLE).
+\end{enumerate}
+
+\begin{itemize}[+]
+  \item Tractable.
+  \item Asymptotically unbiased.
+\end{itemize}
+
+\begin{itemize}[-]
+  \item Variance issues.
+\end{itemize}
+
+\subsubsection{Bayesianism}
+
+\begin{enumerate}
+  \item Guess a prior.
+  \item Pick a parametric model.
+  \item Derive a posterior.
+\end{enumerate}
+
+\begin{itemize}[+]
+  \item Low variance.
+\end{itemize}
+
+\begin{itemize}[-]
+  \item Intractable.
+  \item Bias issues.
+\end{itemize}
+
+\subsubsection{Statistical Learning}
+
+\begin{enumerate}
+  \item Forget about distributions!
+  \item Define a loss function.
+  \item Approximately minimize the expected loss.
+\end{enumerate}
+
+\begin{itemize}[+]
+  \item Tractable.
+  \item Low bias and variance with proper model.
+\end{itemize}
+
+\begin{itemize}[-]
+  \item Model selection problem.
+\end{itemize}
+
+\subsubsection{Non-Parametric Statistics}
+
+\begin{enumerate}
+  \item Forget about distributions!
+  \item Generate multiple samples from your data.
+  \item Produce estimates from these samples.
+\end{enumerate}
+
+\begin{itemize}[+]
+  \item Low bias and variance.
+\end{itemize}
+
+\begin{itemize}[-]
+  \item Highly intractable.
+\end{itemize}
+
+\subsection{Statistical learning}
+
+% NOTE: derivation statistical learning
+
+- restrict the space of possible choices of f to a usually parameterizable set H
+
+- collect a sample Z
+
+- use a differentiable loss function
+
+- approximate our desired f with:
+
+% TODO: formula and image w9.6
+
+\subsection{Objects, data, and representations}
+
+- represent objects of interest and characterize them according to
+their typical patterns for detection, classification, abstraction
+(compression), etc..
+
+- We represent objects using measurements in a sample space.
+
+Features are derived quantities or indirect observations which often
+significantly compress the information content of measurements.
+
+- Hypothesis class
+
+- Loss function
+
+\subsection{Recap}
+
+\subsubsection{Calculus}
+
+- Derivation
+
+- Useful properties
+
+\subsubsection{Probability theory}
+
+Probability space
+
+Random variables
+
+Expectations
+
+\subsubsection{information theory}
+
+% TODO: extend recap information theory
+
+Bit-calculation, how much do you need to encode ... ?
+
+Code lengths, informativeness, uncertainty, and surprise
+
+Entropy
+
+Conditional entropy
+
+Mutual information
+
+Kullback-Leibler divergence
+
+Cross-entropy
+

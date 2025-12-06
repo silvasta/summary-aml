@@ -1,11 +1,112 @@
 
 \section{Graph}
 
-Toxic, non toxic? structure matters -> graph
+Is a molecule toxic or not? structure matters -> graph
 
-G(V,E)
+\textbf{Graph} $G(V,E)$ consits of
 
-V={1,...,N}
+- non-empty vertice set $V$
 
-$E c= V\times V$
+- edges $E \subseteq V \times V$
+
+\textbf{Annotated graph} $G = (V, E, h^V , h^E , h_0)$
+
+- $h^V:V\to \mathbb{R}^{d_V}$
+assigns vector of features to each vertex
+
+- $h^E:E\to \mathbb{R}^{d_E}$
+assigns vector of features to each edge
+
+- $h_0 \in \mathbb{R}^{d_0}$
+vector of global features
+
+\subsection{Neural Networks for graphs}
+
+Graphs are not like vectors,
+who can be represented as arrays of fixed length.
+
+Graphs are not like images,
+which can be represented as tensors of fixed dimensions.
+
+Graphs are not like texts,
+which can be represented as sequences of tokens of arbitrary length.
+
+- Standard neural network architectures
+cannot be used to represent randomized graph functions!
+
+- How can we come up with neural networks that are
+“universal approximators” of randomized graph functions?
+
+\subsubsection{Analyzing how neural networks work}
+
+We iteratively process representations by
+
+- transforming them,
+
+- aggregating them with sum,
+
+- and then applying an activation function.
+
+In CNNs, we iteratively process image representations using
+convolutional filters. Such filters process a patch of the image by:
+
+− transforming the patch
+
+− aggregating their values with an operator (usually sum)
+
+− and then applying an activation function
+
+\subsubsection{Generalization to graphs}
+
+We then need a “graph filter” that processes “patches” of the graph
+to produce new representations. Such filter would:
+
+− transform the “patch”,
+
+− aggregate its results,
+
+− and then apply an activation function.
+
+For each vertex, we define a patch as the vertex and its set of neighbors.
+
+- So suppose that the features of each vertex are $h_u$ , for $u ·\in V$.
+
+- We produce new features as follows:
+
+\[ h_u′ = \phi \left(
+    \frac{1}{\sqrt{\deg(u)\deg(v)}}
+    \sum_{v\in N(u)\cup {u}} h_v W
+\right) \]
+
+− $W$ is a matrix.
+
+− $\phi$ is an element-wise activation function.
+
+− $\deg(u)$ is the degree of $u$; that is, the number of edges adjacent to $u$.
+
+We divide by the degrees of $u$ and $v$ to maintain all features on a
+same scale.
+
+We can then iterate this process multiple times, giving rise to layers.
+
+% TODO: GNN formulation
+COMPACT MATRIX NOTATION
+
+\[
+  H^{(l+1)} = \phi(X)
+\]
+
+% TODO: gnn, What are message-passing algorithms? w8.19
+
+% NOTE: final formulation w8.20 GNN and variable definitino
+
+\subsection{Oversmoothing}
+
+% TODO: Oversmoothing
+
+All representation vectors collapse into a one dimensional subspace.
+
+Solution 1: GIN
+
+Solution 2: Laplace Positional Encodings
 

@@ -1,0 +1,121 @@
+\section{Anomaly Detection}
+
+Problem formalization
+
+Given $X = \{x_1,\dots,x_n\} \subseteq \mathbb{R}^{D}$
+from \textit{normal} class $N \subseteq \mathbb{R}^{D}$
+
+Compute $\phi: \mathbb{R}^{D}\to\{0,1\}$
+such that $\phi(x) = 1$ iff $x \notin N$
+
+Strategy
+
+- An anomaly is an unlikely event.
+
+- We fit a model of a parametric family of distributions
+
+- We define an anomaly score
+
+The hypothesis class
+
+It has been observed that linear projections of high-dimensional
+distributions onto low-dimensional spaces resemble Gaussian distributions.
+
+We propose then to project the training data and then fit a GMM to it.
+
+\subsection{Dimensionality reduction with PCA}
+
+Given $X = \{x_1,\dots,x_n\} \subseteq \mathbb{R}^{D}$
+
+Find linear projection $\pi: \mathbb{R}^{D}\to\mathbb{R}^{d}$,
+with $d<<D$, such that $\pi(X)$ has sufficiently large variance.
+
+\textbf{Simple case} $d = 1$
+
+- Solve it with Lagrange multipliers
+
+- The maximizer of this quadratic function is the largest eigenvalue
+$\lambda_1^\star$ of $S$!
+
+- The optimal projection is the one onto a unit eigenvector
+$u_1^\star$ of $\lambda_1^\star$.
+
+\textbf{General case} d > 1
+
+Set $X_0 = X$ and compute forward to $d$:
+
+- Compute $u_{i+1}^\star$ from $X_i$ as before.
+
+- $X_i = \{x - \text{proj}_{u_i^\star} x: x \in X_{i-1}\}$
+
+Finally
+% Q: stack of u star for projection?
+$\pi(x) = (x^T u_i^\star,...)$
+
+\subsubsection{Strategy}
+
+- Project the training data $X$ from $\mathbb{R}^{D}$ to $\mathbb{R}^{d}$
+
+- Fit a GMM $p_\theta$ to the projected data
+
+- The anomaly score of a point $x$ is then
+$-\log p_\theta(\pi(x))$
+
+\subsection{Gaussian mixture models}
+
+A GMM with $K$ components consists of all distributions whose pdf $p$
+is of the form:
+
+% TODO: formula pdf for gmm
+
+parameter
+$\pi_k$ (weighted norm),
+$\mu_k$ mean
+$\Sigma_k$ positive definite variance
+
+\subsubsection{Fitting GMMs with maximum likelihood}
+
+- choose the distribution p in the model that maximizes the log likelihood
+
+- Decomposition of the log likelihood
+
+- Properties of E and M
+
+- An approximate optimization algorithm
+
+% WARN: EM algorithm slide w9.22
+
+\subsection{Anomaly detection with PCA and EM}
+
+- compute projector using PCA
+
+- fit GMM? using EM-algorithm
+
+- anomaly score for new point is:
+$-\log p_\theta(\pi(x))$
+
+\subsubsection{Validation metric}
+
+F1 score
+
+- only high when both the precision and recall are high
+
+\subsubsection{Experimental validation}
+
+1.We take several classification datasets. For each dataset, we do
+the following.
+
+2.For each class, we define the class as normal and all the other
+classes as anomalies.
+
+3.The normal class is divided into a training set and a testing set at random.
+
+4.The training set is given as input to our GMM+EM procedure.
+
+5.The trained anomaly detector is then asked to classify all examples
+in the testing set and the other classes.
+
+6.We measure the F1 score for each class.
+
+7.We average the F1 scores.
+
