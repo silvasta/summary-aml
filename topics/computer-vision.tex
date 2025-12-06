@@ -1,0 +1,118 @@
+\section{CNNs and UNets}
+
+\subsection{Convolutions and deconvolutions}
+
+\subsubsection{Convolutional filters}
+
+- Input feature map (5x5)
+
+- Padding (2)
+
+- Kernel size (3x3)
+
+- Stride (4)
+
+% TODO: image convolution
+
+\subsubsection{Deconvolutional filters}
+
+% TODO: image deconvolution
+
+\subsubsection{Convolutional and deconvolutional layers}
+
+- A (de)convolutional layer consists of a number of
+equally-sized (de)convolutional filters, a padding, and a stride.
+
+- The output is a tensor where the number of channels
+matches the number of filters in the layer.
+
+\subsection{U-net}
+
+- A typical architecture for image segmentation.
+
+- One can also treat a U-net as some sort of image autoencoder
+
+- Image from original paper:
+https://arxiv.org/abs/1505.04597
+
+\section{Stable diffusion}
+
+\subsection{Diffusion models with images}
+
+Denoising diffusion probabilistic models (DDPM) (Ho et al, 2020)
+
+\subsubsection{Forward process}
+
+% WARN: formula
+
+\subsubsection{Reverse process}
+
+% WARN: formula
+
+\subsection{Conditional diffusion processes}
+
+\section{Neural networks and variational autoencoder}
+
+\subsection{Clip}
+
+Autoencoders create their own representations
+
+This prevents the decoding as text of image representations produced
+by an encoder.
+
+How can we harmonize such representations?
+
+% TODO: clip
+
+\section{Stable diffusion}
+
+Goal
+
+Given a text prompt, produce an image associated to that prompt.
+
+Idea
+
+Produce text and image embeddings that are semantically relatable.
+
+When given a text, we produce an embedding and then use a generative
+model to produce an image, guided with the text.
+
+\subsection{Semantically relatable text embeddings with CLIP}
+
+1. Select an image and a text encoder.
+
+2. Encode all images and texts.
+
+3. Transform all embeddings to the same Euclidean space.
+
+4. Compute a similarity matrix containing all similarities between
+each pair of text-image embeddings.
+
+5. Maximize the diagonal elements and minimize the non-diagonal elements.
+
+% HACK: code: CLIP: Training of embeddings
+
+\subsection{Cross-attention}
+
+We need a cross-attention mechanism for images and texts.
+
+Multi-headed cross-attention mechanism for UNets
+
+\section{ViTs and MAEs}
+
+\subsection{Vision transformers}
+
+\subsection{Masked auto encoders}
+
+\subsubsection{Image encoding vs text encoding}
+
+Images are signals with very heavy spatial redundancy. Words are
+signals with low redundancy.
+
+Pixels have little semantic information. Words have high semantic information.
+
+Principle for an image autoencoder
+
+- Remove a large fraction of the image, and create the encoding from
+there. Then learn to reconstruct the image from only those encodings.
+
