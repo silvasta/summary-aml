@@ -1,0 +1,73 @@
+
+\section{Counterfactual Invariance}
+Key: Models robust to interventions (do-operator). Exam hint: Check invariance
+via causal graphs (SCMs); derive counterfactuals from joint distributions.
+
+\begin{definition}[Structural Causal Model (SCM)]
+  SCM: $X_i = f_i(\mathbf{PA}_i, U_i)$, where $\mathbf{PA}_i$ are parents,
+  $U_i$ noise. Intervention do($X=x$): Replace $f_X$ with constant $x$.
+\end{definition}
+
+\textbf{Formulas:}
+\begin{align*}
+  &P(Y|do(X=x)) = \sum_z P(Y|X=x,Z=z) P(Z|X=x) \quad (\text{Adjustment
+  formula, if backdoor}) \\
+  & \text{Counterfactual}:
+  P(Y_x = y | Y_{x'} = y') \quad (\text{"What if X was x given
+  observed $Y_{x'}=y$'"})
+\end{align*}
+
+\textbf{Tricks/Hints:}
+\begin{itemize}
+  \item Invariance: Model $f$ is counterfactually invariant if $f(X, do(A)) =
+    f(X)$ for action $A$ (e.g., distribution shift robustness).
+  \item Exam proof: Use Pearl's ladder (observational $\to$ interventional
+    $\to$ counterfactual). Check d-separation for identifiability.
+\end{itemize}
+
+\begin{sstTitleBox}[RoyalBlue]{Key Invariance Condition}
+  Invariant if $\mathbb{E}[Y | X, E] = \mathbb{E}[Y | X]$ for environment $E$
+  (no confounding).
+\end{sstTitleBox}
+
+\section{Reproducing Kernel Hilbert Spaces (RKHS)}
+Key: Space $\mathcal{H}$ of functions with kernel $K$. Exam hint: Prove
+properties via inner products; compute norms for regularization.
+
+\begin{definition}[RKHS]
+  Hilbert space $\mathcal{H}$ where eval $f \mapsto f(x)$ continuous.
+  Reproducing: $f(x) = \langle f, K(\cdot, x) \rangle_{\mathcal{H}}$.
+\end{definition}
+
+\textbf{Formulas:}
+\begin{align*}
+  &K(x,y) = \langle \phi(x), \phi(y) \rangle_{\mathcal{H}} \quad (\text{Kernel
+  trick, feature map } \phi) \\
+  &\langle K(\cdot,x), K(\cdot,y) \rangle_{\mathcal{H}} = K(x,y) \quad
+  (\text{Reproducing property}) \\
+  &\|f\|_{\mathcal{H}}^2 = \sum_{i,j} \alpha_i \alpha_j K(x_i, x_j) \quad
+  (\text{For } f(\cdot) = \sum_i \alpha_i K(\cdot, x_i)) \\
+  &\text{Mercer's Thm: } K(x,y) = \sum_{k=1}^\infty \lambda_k e_k(x) e_k(y)
+  \quad (\text{Pos. def. kernel decomposition})
+\end{align*}
+
+\textbf{Tricks/Hints:}
+\begin{itemize}
+  \item Positive definite: $K$ pos. def. if $\sum_{i,j} c_i c_j K(x_i,x_j)
+    \geq 0 \ \forall \mathbf{c} \neq 0$.
+  \item Kernel ridge reg.: $\hat{f} = \argmin_f \|f\|_{\mathcal{H}}^2 +
+    \frac{1}{n} \sum_i (y_i - f(x_i))^2$. Sol: $\boldsymbol{\alpha} =
+    (\mathbf{K}
+    + \lambda \mathbf{I})^{-1} \mathbf{y}$.
+  \item Exam: For new $x_*$, predict $f(x_*) = \mathbf{k}_*^T
+    \boldsymbol{\alpha}$, where $k_{*i} = K(x_*, x_i)$.
+\end{itemize}
+
+\begin{sstTitleBox}[RoyalBlue]{Common Kernels}
+  \begin{tabular}{ll}
+    Linear: & $K(x,y) = x^T y$ \\
+    RBF: & $K(x,y) = \exp(-\|x-y\|^2 / 2\sigma^2)$ \\
+    Polynomial: & $K(x,y) = (x^T y + c)^d$
+  \end{tabular}
+\end{sstTitleBox}
+

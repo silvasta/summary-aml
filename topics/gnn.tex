@@ -1,112 +1,80 @@
+\section{Graph Neural Networks (GNNs)}
 
-\section{Graph}
+\subsection{Basics \& Notation}
+Graph $G = (V, E)$, $|V| = n$ nodes, adjacency matrix $\mathbf{A} \in
+\{0,1\}^{n \times n}$ (symmetric for undirected). Feature matrix $\mathbf{X}
+\in \mathbb{R}^{n \times d}$ (node features). Degree matrix $\mathbf{D} =
+\diag(\sum_j A_{ij})$.
 
-Is a molecule toxic or not? structure matters -> graph
+Normalized adjacency: $\tilde{\mathbf{A}} = \mathbf{A} + \mathbf{I}$
+(self-loops), $\hat{\mathbf{A}} = \mathbf{D}^{-1/2} \tilde{\mathbf{A}}
+\mathbf{D}^{-1/2}$ (symmetric normalization).
 
-\textbf{Graph} $G(V,E)$ consits of
+Message passing: Update node $v$ as $h_v^{(l+1)} = \sigma \left( \sum_{u \in
+\mathcal{N}(v)} m_{u \to v}^{(l)} \right)$, where $m$ aggregates neighbor
+info.
 
-- non-empty vertice set $V$
+\subsection{Graph Convolutional Network (GCN)}
+Layer: $\mathbf{H}^{(l+1)} = \sigma(\hat{\mathbf{A}} \mathbf{H}^{(l)}
+\mathbf{W}^{(l)})$, with $\mathbf{H}^{(0)} = \mathbf{X}$.
 
-- edges $E \subseteq V \times V$
+Spectral view: Approximation of graph Laplacian $\mathbf{L} = \mathbf{D} -
+\mathbf{A}$, normalized $\hat{\mathbf{L}} = \mathbf{I} - \hat{\mathbf{A}}$.
 
-\textbf{Annotated graph} $G = (V, E, h^V , h^E , h_0)$
+Over-smoothing: Deep GCNs make representations similar; mitigate with residual
+connections or normalization.
 
-- $h^V:V\to \mathbb{R}^{d_V}$
-assigns vector of features to each vertex
+\subsection{Graph Attention Network (GAT)}
+Attention: $\alpha_{ij} = \softmax_j \left( \text{LeakyReLU} \left(
+\mathbf{a}^\top [\mathbf{W} h_i \| \mathbf{W} h_j] \right) \right)$.
 
-- $h^E:E\to \mathbb{R}^{d_E}$
-assigns vector of features to each edge
+Update: $h_i^{(l+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i) \cup i}
+\alpha_{ij} \mathbf{W} h_j^{(l)} \right)$. Multi-head: Concat or average
+heads.
 
-- $h_0 \in \mathbb{R}^{d_0}$
-vector of global features
+\subsection{Tasks \& Pooling}
+Node classification: Predict labels from node embeddings.
 
-\subsection{Neural Networks for graphs}
+Graph classification: Pool via readout $r = f(\{h_v | v \in V\})$ (e.g., mean,
+max, sum). Hierarchical pooling (e.g., DiffPool).
 
-Graphs are not like vectors,
-who can be represented as arrays of fixed length.
+Link prediction: Score edges with $s(u,v) = h_u^\top h_v$ or MLP on
+concatenated embeddings.
 
-Graphs are not like images,
-which can be represented as tensors of fixed dimensions.
+Tricks: Use skip connections for deep GNNs; normalize features; handle
+heterophily with signed messages or higher-order neighbors.
 
-Graphs are not like texts,
-which can be represented as sequences of tokens of arbitrary length.
+\section{Information Theory}
 
-- Standard neural network architectures
-cannot be used to represent randomized graph functions!
+\subsection{Key Measures}
+Entropy: $H(X) = -\mathbb{E}_{p(x)} [\log p(x)] = -\sum p(x) \log p(x)$
+(discrete); continuous: $-\int p(x) \log p(x) \, dx$.
 
-- How can we come up with neural networks that are
-“universal approximators” of randomized graph functions?
+Joint entropy: $H(X,Y) = -\mathbb{E}[\log p(x,y)]$.
 
-\subsubsection{Analyzing how neural networks work}
+Conditional: $H(Y|X) = H(X,Y) - H(X)$.
 
-We iteratively process representations by
+Mutual information: $I(X;Y) = H(X) + H(Y) - H(X,Y) = H(X) - H(X|Y) =
+\KL(p(x,y) \| p(x)p(y)) \geq 0$.
 
-- transforming them,
+Cross-entropy: $H(p,q) = -\mathbb{E}_p [\log q] = H(p) + \KL(p \| q)$.
 
-- aggregating them with sum,
+KL divergence: $\KL(p \| q) = \mathbb{E}_p [\log (p/q)] \geq 0$, not
+symmetric.
 
-- and then applying an activation function.
+\subsection{Applications in ML/GNNs}
+Variational bound: ELBO in VAEs uses $\KL(q \| p)$.
 
-In CNNs, we iteratively process image representations using
-convolutional filters. Such filters process a patch of the image by:
+InfoMax in GNNs: Maximize $I(\mathbf{h}_v; \mathbf{h}_G)$ for unsupervised
+learning (e.g., InfoGraph).
 
-− transforming the patch
+Entropy regularization: In RL/policy, add $-H(\pi)$ to encourage exploration.
 
-− aggregating their values with an operator (usually sum)
+Chain rule: $H(X_1,\dots,X_n) = \sum H(X_i | X_{<i})$.
 
-− and then applying an activation function
+Tricks: Jensen-Shannon divergence for stability:
+$\text{JSD}(p \| q) = \frac{1}{2} \KL(p \| m) + \frac{1}{2} \KL(q \|
+m)$, $m=(p+q)/2$.
 
-\subsubsection{Generalization to graphs}
-
-We then need a “graph filter” that processes “patches” of the graph
-to produce new representations. Such filter would:
-
-− transform the “patch”,
-
-− aggregate its results,
-
-− and then apply an activation function.
-
-For each vertex, we define a patch as the vertex and its set of neighbors.
-
-- So suppose that the features of each vertex are $h_u$ , for $u ·\in V$.
-
-- We produce new features as follows:
-
-\[ h_u′ = \phi \left(
-    \frac{1}{\sqrt{\deg(u)\deg(v)}}
-    \sum_{v\in N(u)\cup {u}} h_v W
-\right) \]
-
-− $W$ is a matrix.
-
-− $\phi$ is an element-wise activation function.
-
-− $\deg(u)$ is the degree of $u$; that is, the number of edges adjacent to $u$.
-
-We divide by the degrees of $u$ and $v$ to maintain all features on a
-same scale.
-
-We can then iterate this process multiple times, giving rise to layers.
-
-% TODO: GNN formulation
-COMPACT MATRIX NOTATION
-
-\[
-  H^{(l+1)} = \phi(X)
-\]
-
-% TODO: gnn, What are message-passing algorithms? w8.19
-
-% NOTE: final formulation w8.20 GNN and variable definitino
-
-\subsection{Oversmoothing}
-
-% TODO: Oversmoothing
-
-All representation vectors collapse into a one dimensional subspace.
-
-Solution 1: GIN
-
-Solution 2: Laplace Positional Encodings
+In GNNs: Use MI to measure information flow between layers or nodes.
 

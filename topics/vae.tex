@@ -1,0 +1,85 @@
+% topics/vae.tex
+% Summary for Week 12: Variational Autoencoders and Non-Parametric Bayesian
+Methods
+% Compact for exam formula sheet: key formulas, tricks, hints.
+
+\chapter{VAEs \& Non-Parametric Bayesian}
+
+\section{Variational Autoencoders (VAEs)}
+
+\subsection{Key Concepts \& Setup}
+VAE: Generative model with latent $z \sim \mathcal{N}(0,I)$. Encoder
+$q_\phi(z|x)$ (neural net) approximates posterior $p(z|x)$. Decoder
+$p_\theta(x|z)$ reconstructs $x$. Goal: Maximize marginal log-likelihood $\log
+p(x) = \mathbb{E}_{q(z|x)}[\log p(x|z)] - \KL(q(z|x) \| p(z|x))$.
+
+\textbf{Trick}: Use ELBO as surrogate (variational lower bound).
+
+\subsection{ELBO Formula}
+\[
+  \text{ELBO}(\theta,\phi) = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] -
+  \KL(q_\phi(z|x) \| p(z))
+\]
+- Reconstruction term: Measures data fit (e.g., Bernoulli or Gaussian
+likelihood).
+- KL term: Regularizes encoder to match prior (closed-form for Gaussians:
+  $\KL(\mathcal{N}(\mu,\sigma^2) \| \mathcal{N}(0,1)) = \frac{1}{2} \sum (1 +
+\log \sigma^2 - \mu^2 - \sigma^2)$).
+- Exam hint: Derive by Jensen's inequality; $\log p(x) \geq \text{ELBO}$.
+
+\subsection{Reparameterization Trick}
+For backprop through sampling: $z = \mu + \sigma \odot \epsilon$, $\epsilon
+\sim \mathcal{N}(0,I)$. Allows gradient $\nabla_\phi
+\mathbb{E}_{q_\phi(z|x)}[f(z)] \approx \nabla_\phi f(\mu + \sigma \odot
+\epsilon)$.
+
+\textbf{Trick}: Use for stochastic optimization; avoids high-variance Monte
+Carlo.
+
+\subsection{Training \& Hints}
+- Loss: $-\text{ELBO}$ (minimize via SGD/Adam).
+- $\beta$-VAE: Weight KL term by $\beta >1$ for disentangled latents.
+- Exam-relevant: VAEs vs. GANs (VAEs stable, probabilistic); limitations
+(blurry outputs due to pixel-wise loss).
+
+\section{Non-Parametric Bayesian Methods}
+
+\subsection{Gaussian Processes (GPs)}
+GP: $f(x) \sim \text{GP}(m(x), k(x,x'))$, mean $m(\cdot)$ (often 0), kernel
+$k(\cdot,\cdot)$ (e.g., RBF: $k(x,x') = \exp(-\|x-x'\|^2 / 2\ell^2)$).
+
+\textbf{Predictive Distribution} (Regression, noisy $y = f(x) + \epsilon$,
+$\epsilon \sim \mathcal{N}(0,\sigma^2)$):
+Let $X_*, y_*$ for test, $X,y$ for train. Kernel matrix $K = k(X,X) + \sigma^2
+I$.
+\[
+  \mu_* = k(X_*,X) (K)^{-1} y, \quad \Sigma_* = k(X_*,X_*) - k(X_*,X) (K)^{-1}
+  k(X,X_*)
+\]
+- Posterior: $p(f_*|X_*,X,y) = \mathcal{N}(\mu_*,\Sigma_*)$.
+- Log-marginal likelihood: $\log p(y|X) = -\frac{1}{2} y^T K^{-1} y -
+\frac{1}{2} \log |K| - \frac{n}{2} \log 2\pi$ (for hyperparam tuning).
+
+\subsection{Kernels \& Tricks}
+- Valid kernels: Positive semi-definite (e.g., linear, polynomial, Matérn).
+- Trick: Kernel trick for non-linear regression without explicit features.
+- Composition: Sum/product of kernels for flexibility.
+- Exam hint: Compute $K$ matrix for small datasets; derive posterior
+mean/variance.
+
+\subsection{Dirichlet Processes (DPs) \& Infinite Mixtures}
+DP: $\text{DP}(\alpha, H)$ for infinite mixture models (e.g., Dirichlet Process
+Mixture Model for clustering).
+Stick-breaking:
+$G = \sum_{k=1}^\infty \pi_k \delta_{\theta_k}$, $\pi_k
+= v_k \text{prod}_{j=1}^{k-1} (1-v_j)$,
+$v_j \sim \beta(1,\alpha)$.
+- Exam-relevant: Non-parametric alternative to finite GMMs; allows model
+complexity to grow with data.
+- Hint: Chinese Restaurant Process analogy for sampling.
+
+\subsection{Hints for Non-Parametrics}
+- GPs vs. NNs: GPs exact uncertainty, but $O(n^3)$ cost (use sparse
+approximations).
+- Use for Bayesian optimization or regression with small data.
+

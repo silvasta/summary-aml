@@ -1,21 +1,71 @@
 
-% TODO: definition f theta, X to y
 
-- Activation functions
+\section{Neural Networks: Basics}
+\textbf{MLP Forward Pass}: For layer $l$, $\mathbf{z}^{(l)} = \mathbf{W}^{(l)}
+\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}$, $\mathbf{a}^{(l)} =
+\sigma(\mathbf{z}^{(l)})$.
 
-- Forward computation
+\textbf{Activation Functions}:
+- Sigmoid: $\sigma(x) = \frac{1}{1 + e^{-x}}$, $\sigma'(x) = \sigma(x)(1 -
+\sigma(x))$.
+- ReLU: $\sigma(x) = \max(0, x)$, derivative $1$ if $x > 0$ else $0$.
+\textit{Trick}: Mitigates vanishing gradients.
+- Softmax: $\sigma(\mathbf{z})_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$, for
+classification.
 
-- Gradient descent
+\textbf{Loss Functions}:
+- MSE: $\mathcal{L} = \frac{1}{2N} \sum_i (\hat{y}_i - y_i)^2$.
+- Cross-Entropy: $\mathcal{L} = -\sum_i y_i \log(\hat{y}_i)$. \textit{Hint}:
+For multi-class, combine with softmax.
 
-- Chain rule
+\textbf{Backpropagation}:
+- Output gradient: $\delta^{(L)} = \frac{\partial \mathcal{L}}{\partial
+\mathbf{z}^{(L)}} = (\hat{\mathbf{y}} - \mathbf{y}) \odot
+\sigma'(\mathbf{z}^{(L)})$.
+- Hidden: $\delta^{(l)} = (\mathbf{W}^{(l+1)T} \delta^{(l+1)}) \odot
+\sigma'(\mathbf{z}^{(l)})$.
+- Weight update: $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} =
+\delta^{(l)} \mathbf{a}^{(l-1)T}$. \textit{Trick}: Use chain rule; initialize
+weights $\sim \mathcal{N}(0, \frac{2}{n_{in}})$ (He init for ReLU).
 
-% TODO: example chain rule
+\textbf{Optimization Tricks}: Gradient Descent: $\theta \leftarrow \theta -
+\eta \nabla \mathcal{L}$. Momentum: Add velocity term. Adam: Adaptive learning
+rates with moments.
 
-A \textbf{computation DAG} is a directed acyclic graph
-where vertices are annotated with variables
-and edges are annotated with differentiable vector fields.
+\section{Attention Mechanisms}
+\textbf{Scaled Dot-Product Attention}: $\text{Attention}(\mathbf{Q},
+\mathbf{K}, \mathbf{V}) = \softmax\left( \frac{\mathbf{Q}
+\mathbf{K}^T}{\sqrt{d_k}} \right) \mathbf{V}$.
+- $\mathbf{Q}$: Queries ($n \times d_k$), $\mathbf{K}$: Keys ($m \times d_k$),
+$\mathbf{V}$: Values ($m \times d_v$).
+- \textit{Trick}: Scaling prevents softmax saturation; causal mask for
+decoders (upper triangle $-\infty$).
 
-- generalization chain rule
+\textbf{Multi-Head Attention}: $\text{MultiHead} = \text{Concat}(\text{head}_1,
+\dots, \text{head}_h) \mathbf{W}^O$,
+- Each head: $\text{head}_i = \text{Attention}(\mathbf{Q} \mathbf{W}_i^Q,
+\mathbf{K} \mathbf{W}_i^K, \mathbf{V} \mathbf{W}_i^V)$.
+- \textit{Hint}: $h=8$ typical; allows parallel focus on subspaces.
 
-- Backward computation
+\textbf{Self-Attention}: $\mathbf{Q} = \mathbf{K} = \mathbf{V} = \mathbf{X}
+\mathbf{W}$ (input projection). \textit{Exam Tip}: Captures dependencies
+without recurrence; $O(n^2)$ time.
+
+\section{Transformers}
+\textbf{Architecture}: Encoder (self-attn + FFN) stack; Decoder (masked
+self-attn + enc-dec attn + FFN) stack.
+- FFN: Two linear layers with ReLU: $\text{FFN}(\mathbf{x}) = \max(0,
+\mathbf{x} \mathbf{W}_1 + \mathbf{b}_1) \mathbf{W}_2 + \mathbf{b}_2$.
+- Residual: $\mathbf{x} \leftarrow \mathbf{x} + \text{Sublayer}(\mathbf{x})$.
+LayerNorm after.
+
+\textbf{Positional Encoding}: $\text{PE}_{(pos, 2i)} = \sin\left(
+\frac{pos}{10000^{2i/d}} \right)$, $\text{PE}_{(pos, 2i+1)} = \cos\left(
+\frac{pos}{10000^{2i/d}} \right)$.
+- Added to input embeddings. \textit{Trick}: Allows order awareness; fixed or
+learned.
+
+\textbf{Training/Inference Tricks}: Teacher forcing for training; beam search
+for generation. \textit{Exam Focus}: Derive attention gradients or compare to
+RNNs (transformers handle long-range better).
 

@@ -1,0 +1,64 @@
+\section{PAC Learning}
+
+\subsection{Key Definitions \& Framework}
+\begin{itemize}[leftmargin=*,noitemsep]
+  \item \textbf{Hypothesis class} $\mathcal{H}$: Set of functions $h:
+    \mathcal{X} \to \mathcal{Y}$ (e.g., binary classifiers, $\mathcal{Y} =
+    \{0,1\}$).
+  \item \textbf{Realizable PAC}: $\exists h^* \in \mathcal{H}$ with true risk
+    $L(h^*) = 0$.
+  \item \textbf{PAC Learnable}: $\exists$ learner s.t. $\forall$ distributions
+    $\mathcal{D}$, $\forall \epsilon, \delta > 0$, with prob. $\geq 1-\delta$,
+    outputs $h$ with $L(h) \leq \epsilon$ using $m =
+    m(\epsilon,\delta)$ samples.
+  \item \textbf{Agnostic PAC}: No assumption on $h^*$; minimize excess risk over
+    $\mathcal{H}$.
+  \item \textbf{True/Generalization Risk}: $L(h) = \mathbb{E}_{(x,y) \sim
+    \mathcal{D}}[\ell(h(x), y)]$ (e.g., 0-1 loss: $\ell = \mathbf{1}_{h(x) \neq
+    y}$).
+  \item \textbf{Empirical Risk}: $\hat{L}(h) = \frac{1}{m} \sum_{i=1}^m
+    \ell(h(x_i), y_i)$.
+\end{itemize}
+
+\subsection{VC Dimension \& Shattering}
+\begin{itemize}[leftmargin=*,noitemsep]
+  \item \textbf{Shattering}: $\mathcal{H}$ shatters set $S \subseteq
+    \mathcal{X}$ if $|\{\mathbf{y} \in \{0,1\}^{|S|} : \exists h \in \mathcal{H}
+    \text{ realizes } \mathbf{y} \text{ on } S\}| = 2^{|S|}$.
+  \item \textbf{Growth Function}: $\Pi_{\mathcal{H}}(m) = \max_{S: |S|=m}
+    |\{h|_S : h \in \mathcal{H}\}| \leq \left( \frac{em}{d} \right)^d$
+    (Sauer-Shelah, if VC-dim $d < \infty$).
+  \item \textbf{VC Dimension} $d = \text{VC}(\mathcal{H})$: Largest $|S|$ s.t.
+    $\mathcal{H}$ shatters $S$ (infinite if no such max).
+  \item \textbf{Examples}: VC(intervals on $\mathbb{R}$) = 2; VC(linear
+    classifiers in $\mathbb{R}^d$) = $d+1$; VC(axis-aligned rectangles in
+    $\mathbb{R}^2$) = 4.
+  \item \textbf{Trick for VC Calc}: Find largest shatterable set (e.g., for
+    half-planes: 3 points not collinear shatter, 4 do not).
+\end{itemize}
+
+\subsection{Key Formulas \& Bounds}
+\textbf{Fundamental Thm of PAC (Realizable, Finite $\mathcal{H}$)}: $m \geq
+\frac{1}{\epsilon} (\ln|\mathcal{H}| + \ln(1/\delta))$ samples suffice for
+$L(h) \leq \epsilon$ w.p. $\geq 1-\delta$ via ERM.
+
+\textbf{Infinite $\mathcal{H}$ (VC-based)}: For VC-dim $d$, $m \geq C \frac{d
++ \ln(1/\delta)}{\epsilon}$ (lower bound); upper: $m = O\left( \frac{d
+\ln(1/\epsilon) + \ln(1/\delta)}{\epsilon} \right)$.
+
+\textbf{Agnostic PAC (Uniform Convergence)}: w.p. $\geq 1-\delta$,
+\[ |L(h) - \hat{L}(h)| \leq \sqrt{\frac{2d \ln(em/d) + \ln(2/\delta)}{m}}
+\quad (\text{Rademacher/VC bound}). \]
+
+\textbf{Sample Complexity (Agnostic)}: $m = O\left( \frac{d \ln(1/\epsilon) +
+\ln(1/\delta)}{\epsilon^2} \right)$ for excess risk $\leq \epsilon$.
+
+\textbf{Tricks}:
+\begin{itemize}[leftmargin=*,noitemsep]
+  \item Use Hoeffding for finite $|\mathcal{H}|$: $\Pr(|L - \hat{L}| > \epsilon)
+    \leq 2|\mathcal{H}| e^{-2m\epsilon^2}$.
+  \item For VC, bound $\Pi_{\mathcal{H}}(m) \leq \sum_{i=0}^d \binom{m}{i} \leq
+    (em/d)^d$.
+  \item ERM is PAC if $\mathcal{H}$ has finite VC-dim.
+\end{itemize}
+

@@ -6,14 +6,13 @@
 % Document Type
 %-----------------------------------------------------------------
 % \documentclass[secnumdepth=2]{sst-custom}
+% \documentclass[layout=preview,secnumdepth=3,tight]{sst-custom}
+%-----------------------------------------------------------------
+% Options for exam
+\documentclass[layout=summary, columns=3,secnumdepth=2,tight]{sst-custom}
 % \documentclass[layout=summary, columns=4,secnumdepth=2,tight]{sst-custom}
-\documentclass[layout=preview,secnumdepth=3,tight]{sst-custom}
 %-----------------------------------------------------------------
 
-%-----------------------------------------------------------------
-% experimental
-%----------------------------------------------------------------
-% \usepackage{setspace}
 %--------------\--------------------------------------------------
 \begin{document}
 
@@ -25,52 +24,27 @@
   % Preview width is: \the\previewwidth
   %-----------------------------------------------------------------
   \input{title/title-blue-grey.tex}
+  Current font size: \csname f@size\endcsname pt % needs to be 11 for exam
   %-----------------------------------------------------------------
-  \iftoggle{use-small-font}{\footnotesize}{}
+  % \iftoggle{use-small-font}{\footnotesize}{}
   %-----------------------------------------------------------------
-  \tableofcontents
+  % \tableofcontents
   %-----------------------------------------------------------------
-
-  %-----------------------------------------------------------------
-  \chapter{Representation}
   \input{topics/representation.tex}
-
-  \chapter{Regression}
-  \input{topics/regression.tex}
-  \input{topics/gaussian-processes-for-regression.tex}
-  \input{topics/ensemble-methods-for-classifier-design.tex}
-
-  \chapter{Support Vector Machines}
-  \input{topics/convex-optimization.tex}
-  \input{topics/kernelized-polynomial-regression.tex}
-  \input{topics/support-vector-machines.tex}
-
-  \chapter{Neural Networks}
+  % \input{topics/regression.tex}
+  \input{topics/gaussian-processes.tex}
+  \input{topics/svm-ensemble.tex}
   \input{topics/neural-networks.tex}
-
-  \chapter{Transformer}
-  \input{topics/transformer.tex}
-
-  \chapter{Computer Vision}
   \input{topics/computer-vision.tex}
-
-  \chapter{Diffusion}
-  \input{topics/diffusion.tex}
-
-  \chapter{Graph Neural Networks}
+  % \input{topics/diffusion.tex}
   \input{topics/gnn.tex}
-
-  \chapter{Anomaly Detection}
-  \input{topics/recap-information-theory.tex}
   \input{topics/anomaly-detection.tex}
-
-  \chapter{Reinforcement Learning}
   \input{topics/rl.tex}
-  \input{topics/active-learning.tex}
-
+  \input{topics/counterfactual-invariance.tex}
+  \input{topics/vae.tex}
+  \input{topics/pac-learning.tex}
   %-----------------------------------------------------------------
-  % \chapter{Exercises}
-  % \input{exercise/e1.tex}
+  % \input{topics/receipts.tex}
   %-----------------------------------------------------------------
   \iftoggle{do-multicol}{
 \end{multicols*}}{}

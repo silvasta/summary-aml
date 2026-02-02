@@ -1,118 +1,47 @@
-\section{CNNs and UNets}
 
-\subsection{Convolutions and deconvolutions}
+\section{Computer Vision}
 
-\subsubsection{Convolutional filters}
+\subsection{Convolutional Neural Networks (CNNs)}
+\textbf{Key Concepts:} Parameter sharing, local connectivity, translation
+invariance. Architectures: LeNet (simple), AlexNet (deep with ReLU/dropout).
 
-- Input feature map (5x5)
+\textbf{Discrete Convolution (2D):} For input $I$ (size $H \times W \times
+C$), kernel $K$ (size $k_h \times k_w \times C$),
+\[
+  O[i,j] = \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} \sum_{c=1}^{C} I[i+m, j+n, c]
+  \cdot K[m,n,c] + b
+\]
+Output size: $\lfloor (H - k_h + 2p)/s \rfloor + 1$, where $p=$ padding, $s=$
+stride.
 
-- Padding (2)
+\textbf{Pooling (Max/Avg):} Reduces dims, e.g., max-pool: $O[i,j] = \max_{m,n}
+I[i \cdot s + m, j \cdot s + n]$.
 
-- Kernel size (3x3)
+\textbf{Activation Functions:} ReLU: $f(x) = \max(0,x)$; Softmax for
+classification: $\sigma(z_i) = e^{z_i} / \sum e^{z_j}$.
 
-- Stride (4)
+\subsection{Training \& Optimization}
+\textbf{Loss Functions:} Cross-entropy for multi-class: $\mathcal{L} = -\sum
+y_i \log \hat{y}_i$.
 
-% TODO: image convolution
+\textbf{Backpropagation in CNNs:} Gradients via chain rule. For conv layer:
+- Weight grad: $\frac{\partial \mathcal{L}}{\partial K[m,n,c]} = \sum_{i,j}
+\frac{\partial \mathcal{L}}{\partial O[i,j]} \cdot I[i+m,j+n,c]$.
+- Input grad: Rotate kernel 180° and convolve with output grad.
 
-\subsubsection{Deconvolutional filters}
+\textbf{Tricks:} Batch norm: Normalize activations $\hat{x} = (x -
+\mu)/\sqrt{\sigma^2 + \epsilon}$, then $\gamma \hat{x} + \beta$. Dropout:
+Randomly zero neurons during training (prob $p$).
 
-% TODO: image deconvolution
+\subsection{Applications \& Metrics}
+\textbf{Classification:} Output via FC layer + softmax.
 
-\subsubsection{Convolutional and deconvolutional layers}
+\textbf{Object Detection Basics:} Bounding boxes; IoU: $\text{IoU} =
+\frac{\text{Area}(A \cap B)}{\text{Area}(A \cup B)}$.
 
-- A (de)convolutional layer consists of a number of
-equally-sized (de)convolutional filters, a padding, and a stride.
+\textbf{Segmentation:} Pixel-wise classification; U-Net: Encoder-decoder with
+skip connections.
 
-- The output is a tensor where the number of channels
-matches the number of filters in the layer.
-
-\subsection{U-net}
-
-- A typical architecture for image segmentation.
-
-- One can also treat a U-net as some sort of image autoencoder
-
-- Image from original paper:
-https://arxiv.org/abs/1505.04597
-
-\section{Stable diffusion}
-
-\subsection{Diffusion models with images}
-
-Denoising diffusion probabilistic models (DDPM) (Ho et al, 2020)
-
-\subsubsection{Forward process}
-
-% WARN: formula
-
-\subsubsection{Reverse process}
-
-% WARN: formula
-
-\subsection{Conditional diffusion processes}
-
-\section{Neural networks and variational autoencoder}
-
-\subsection{Clip}
-
-Autoencoders create their own representations
-
-This prevents the decoding as text of image representations produced
-by an encoder.
-
-How can we harmonize such representations?
-
-% TODO: clip
-
-\section{Stable diffusion}
-
-Goal
-
-Given a text prompt, produce an image associated to that prompt.
-
-Idea
-
-Produce text and image embeddings that are semantically relatable.
-
-When given a text, we produce an embedding and then use a generative
-model to produce an image, guided with the text.
-
-\subsection{Semantically relatable text embeddings with CLIP}
-
-1. Select an image and a text encoder.
-
-2. Encode all images and texts.
-
-3. Transform all embeddings to the same Euclidean space.
-
-4. Compute a similarity matrix containing all similarities between
-each pair of text-image embeddings.
-
-5. Maximize the diagonal elements and minimize the non-diagonal elements.
-
-% HACK: code: CLIP: Training of embeddings
-
-\subsection{Cross-attention}
-
-We need a cross-attention mechanism for images and texts.
-
-Multi-headed cross-attention mechanism for UNets
-
-\section{ViTs and MAEs}
-
-\subsection{Vision transformers}
-
-\subsection{Masked auto encoders}
-
-\subsubsection{Image encoding vs text encoding}
-
-Images are signals with very heavy spatial redundancy. Words are
-signals with low redundancy.
-
-Pixels have little semantic information. Words have high semantic information.
-
-Principle for an image autoencoder
-
-- Remove a large fraction of the image, and create the encoding from
-there. Then learn to reconstruct the image from only those encodings.
+\textbf{Exam Hints:} Derive output shapes; explain why CNNs > FC nets (fewer
+params: $O(k^2 C)$ vs. $O(HWC)$).
 

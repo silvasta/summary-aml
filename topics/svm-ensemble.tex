@@ -1,0 +1,87 @@
+% svm-ensemble.tex
+%-----------------------------------------------------------------
+\section{Support Vector Machines (SVMs)}
+%-----------------------------------------------------------------
+\subsection{Hard-Margin SVM (Linearly Separable)}
+Primal: Minimize \(\frac{1}{2} \|\mathbf{w}\|^2\) s.t. \(y_i (\mathbf{w}^T
+\mathbf{x}_i + b) \geq 1 \ \forall i\).
+
+Dual: Maximize \(\sum_i \alpha_i - \frac{1}{2} \sum_{i,j} \alpha_i \alpha_j
+y_i y_j \mathbf{x}_i^T\mathbf{x}_j\) s.t. \(\alpha_i \geq 0\), \(\sum_i
+\alpha_i y_i = 0\).
+
+Decision: \(f(\mathbf{x}) = \sign\left( \sum_i \alpha_i y_i \mathbf{x}_i^T
+\mathbf{x} + b \right)\). Margin: \(\gamma = \frac{2}{\|\mathbf{w}\|}\).
+
+Support vectors: Points where \(\alpha_i > 0\) (on margin).
+
+%-----------------------------------------------------------------
+\subsection{Soft-Margin SVM}
+Primal: Minimize \(\frac{1}{2} \|\mathbf{w}\|^2 + C \sum_i \xi_i\) s.t. \(y_i
+(\mathbf{w}^T\mathbf{x}_i + b) \geq 1 - \xi_i\), \(\xi_i \geq 0\).
+
+Hinge loss: \(\ell(y, \hat{y}) = \max(0, 1 - y \hat{y})\).
+
+Dual: Same as hard-margin but \(0 \leq \alpha_i \leq C\).
+
+Trick: \(C\) trades bias/variance; large \(C\) → hard-margin.
+
+%-----------------------------------------------------------------
+\subsection{Kernel Trick}
+Replace \(\mathbf{x}_i^T\mathbf{x}_j\) with \(k(\mathbf{x}_i,
+\mathbf{x}_j)\). Dual becomes: Maximize \(\sum_i \alpha_i - \frac{1}{2}
+\sum_{i,j} \alpha_i \alpha_j y_i y_j k(\mathbf{x}_i, \mathbf{x}_j)\).
+
+Common kernels:
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Linear: \(k(\mathbf{x}, \mathbf{z}) = \mathbf{x}^T\mathbf{z}\)
+  \item Polynomial: \(k(\mathbf{x}, \mathbf{z}) = (\mathbf{x}^T\mathbf{z} +
+    c)^d\)
+  \item RBF: \(k(\mathbf{x}, \mathbf{z}) = \exp\left( -\frac{\|\mathbf{x} -
+    \mathbf{z}\|^2}{2\sigma^2} \right)\)
+\end{itemize}
+
+Mercer's condition: Kernel matrix positive semi-definite.
+
+%-----------------------------------------------------------------
+\section{Ensemble Methods}
+%-----------------------------------------------------------------
+\subsection{Bagging (Bootstrap Aggregating)}
+Aggregate \(B\) bootstrapped models: \(\hat{f}(\mathbf{x}) = \frac{1}{B}
+\sum_{b=1}^B \hat{f}_b(\mathbf{x})\) (regression) or majority vote
+(classification).
+
+Reduces variance: Var(\(\hat{f}\)) ≈ \(\frac{1}{B}\) Var(single model) if
+uncorrelated.
+
+Random Forest: Bagging + random feature subsets at splits. OOB error for
+validation.
+
+%-----------------------------------------------------------------
+\subsection{Boosting}
+Sequential: Train weak learners on reweighted data.
+
+AdaBoost: Weights \(w_i^{(t+1)} = w_i^{(t)} \exp(-\alpha_t y_i
+h_t(\mathbf{x}_i))\), normalized. \(\alpha_t = \frac{1}{2} \ln \left( \frac{1
+- \epsilon_t}{\epsilon_t} \right)\), where \(\epsilon_t\) = weighted error.
+
+Final: \(H(\mathbf{x}) = \sign \left( \sum_t \alpha_t h_t(\mathbf{x})
+\right)\).
+
+Gradient Boosting: Minimize loss by adding trees fitting residuals. Update:
+\(f_{m}(\mathbf{x}) = f_{m-1}(\mathbf{x}) + \nu \cdot h_m(\mathbf{x})\)
+(\(\nu\): shrinkage).
+
+Trick: Boosting reduces bias; risk of overfitting—use early stopping.
+
+%-----------------------------------------------------------------
+\subsection{Key Tricks \& Comparisons}
+Bias-variance: Ensembles ↓ variance (bagging) or ↓ bias (boosting).
+
+Error bound (AdaBoost): Training error ≤ \(\exp(-2 \sum_t (\frac{1}{2} -
+\epsilon_t)^2)\).
+
+Exam hint: For non-separable data, use soft-margin or kernels; ensembles for
+high-variance base learners (e.g., deep trees).
+%-----------------------------------------------------------------
+
