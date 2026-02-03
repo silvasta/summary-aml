@@ -2,8 +2,6 @@
 \section{Computer Vision}
 
 \subsection{Convolutional Neural Networks (CNNs)}
-\textbf{Key Concepts:} Parameter sharing, local connectivity, translation
-invariance. Architectures: LeNet (simple), AlexNet (deep with ReLU/dropout).
 
 \textbf{Discrete Convolution (2D)}
 
@@ -12,10 +10,9 @@ Kernel $K$: ($k_h \times k_w \times C$)
 
 $O[i,j] =
 \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} \sum_{c=1}^{C}
-I[i+m, j+n, c] \cdot K[m,n,c] + b$
-
-Output size: $\lfloor (H - k_h + 2p)/s \rfloor + 1$, where $p=$ padding, $s=$
-stride.
+I[i+m, j+n, c] \cdot K[m,n,c] + b$,
+$p=$ padding, $s=$ stride:
+Output size: $\lfloor (H - k_h + 2p)/s \rfloor + 1$,
 
 \textbf{Pooling (Max/Avg):} Reduces dims, e.g., max-pool: $O[i,j] = \max_{m,n}
 I[i \cdot s + m, j \cdot s + n]$.

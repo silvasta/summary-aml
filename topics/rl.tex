@@ -12,13 +12,14 @@ $Q^\pi(s,a) = \mathbb{E}_\pi \left[
 
 \textbf{Advantage} $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$.
 
-\textbf{Bellman Expectation:} $V^\pi(s) = \sum_a \pi(a|s) \sum_{s',r}
-P(s',r|s,a) [r + \gamma V^\pi(s')]$.
-
 \textbf{Bellman Optimality:} $V^*(s) = \max_a \sum_{s',r} P(s',r|s,a) [r +
 \gamma V^*(s')]$
 
 \textbf{Discounted Return:} $G_t = \sum_{k=t}^\infty \gamma^{k-t} R_{k+1}$.
+
+\textbf{Exploration}
+$\epsilon$-greedy (random w.p. $\epsilon$), UCB
+($a = \arg\max [Q(s,a) + c \sqrt{\frac{\ln t}{N(s,a)}}]$)
 
 \textbf{Policy Gradient Thm:} $\nabla_\theta J(\theta) = \mathbb{E}_\pi
 [\nabla_\theta \log \pi_\theta(a|s) Q^\pi(s,a)]$

@@ -1,16 +1,14 @@
 
 \section{Variational Autoencoders (VAEs)}
 
-\subsection{ELBO Formula}
-$\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] -
-\KL(q_\phi(z|x) \| p(z))$
+\subsection{Evidence Lower Bound (ELBO)}
+$\mathbb{E}_{q_\phi(z|x)}[\log
+p_\theta(x|z)] - \mathrm{KL}(q_\phi(z|x) \| p(z))$
 
 \section{Non-Parametric Bayesian Methods}
 
-\subsection{Dirichlet Processes (DPs) \& Infinite Mixtures}
-$G = \sum_{k=1}^\infty \pi_k \delta_{\theta_k}$, $\pi_k
-= v_k \text{prod}_{j=1}^{k-1} (1-v_j)$,
-$v_j \sim \beta(1,\alpha)$.
-Non-parametric alternative to finite GMMs; allows model
-complexity to grow with data.
+\subsection{Dirichlet Processes  \& Non-Param. Bayes}
+
+$\sum_{k=1}^\infty \pi_k \delta_{\theta_k}$,
+$\pi_k = \beta_k \prod_{j=1}^{k-1} (1-\beta_j)$
 

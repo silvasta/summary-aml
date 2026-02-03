@@ -1,32 +1,43 @@
 
-\section{Counterfactual Invariance}
-
-SCM: $X_i = f_i(\mathbf{PA}_i, U_i)$, where $\mathbf{PA}_i$ are parents,
-$U_i$ noise. Intervention do($X=x$): Replace $f_X$ with constant $x$.
-$P(Y|do(X=x)) = \sum_z P(Y|X=x,Z=z) P(Z|X=x)$
-\\
-\text{Counterfactual}:
-$P(Y_x = y | Y_{x'} = y')$
-
-\begin{itemize}
-  \item Invariance: Model $f$ is counterfactually invariant if $f(X, do(A)) =
-    f(X)$ for action $A$ (e.g., distribution shift robustness).
-\end{itemize}
-
-\textbf{Invariance Condition}\\
-$\mathbb{E}[Y | X, E] = \mathbb{E}[Y | X]$ for environment $E$
 
 \section{Reproducing Kernel Hilbert Spaces (RKHS)}
 
-\begin{definition}[RKHS]
-  Hilbert space $\mathcal{H}$ where eval $f \mapsto f(x)$ continuous.
-  Reproducing: $f(x) = \langle f, K(\cdot, x) \rangle_{\mathcal{H}}$.
-\end{definition}
-
+A Reproducing Kernel Hilbert Space (RKHS) is a Hilbert space
+$\mathcal{H}$ of functions $f: \mathcal{X} \to \mathbb{R}$ with a
+kernel $k: \mathcal{X} \times \mathcal{X} \to \mathbb{R}$ such that:
 \begin{itemize}
-  \item Kernel ridge reg.: $\hat{f} = \argmin_f \|f\|_{\mathcal{H}}^2 +
-    \frac{1}{n} \sum_i (y_i - f(x_i))^2$. Sol: $\boldsymbol{\alpha} =
-    (\mathbf{K}
-    + \lambda \mathbf{I})^{-1} \mathbf{y}$.
+  \item $k$ is positive semi-definite (PSD): For any $x_i$, the Gram
+    matrix $K_{ij} = k(x_i, x_j) \succeq 0$.
+  \item Reproducing $\langle f, k(x, \cdot)
+    \rangle_{\mathcal{H}} = f(x)\ \forall f \in \mathcal{H}$. %
 \end{itemize}
+
+\textbf{Counterfactual invariance} In causal ML, models invariant under
+interventions (e.g., do-calculus). For a structural causal model
+(SCM) $Y = f(X, U)$, counterfactuals ask "What if?" (e.g., $Y_{x'}$
+where $x'$ is intervened). Invariance ensures predictions stable
+across envs.
+
+\textbf{Moore-Aronszajn} Every PSD kernel $k$ defines a unique RKHS where
+span$\{k(x,\cdot)\}$ is dense.
+
+\textbf{Mercer} for continuous PSD kernels on compact
+$\mathcal{X}$, $k(x,x') = \sum_{i=1}^\infty \lambda_i \phi_i(x)
+\phi_i(x')$, with $\lambda_i \geq 0$, enabling eigen-decomposition.
+
+\textbf{SVMs} K decision $f(x) = \sum \alpha_i y_i
+k(x_i, x) + b$\\
+\textbf{GP} Prior $f \sim \mathcal{GP}(m,k)$ in RKHS,\\
+posterior mean $\bar{f}(x_*) = k_*^\top (K + \sigma^2 I)^{-1} y$\\
+Counterfactuals in ML: Use invariant risk minimization (IRM) to
+minimize risk invariant to spurious correlations (e.g., Arjovsky et
+al.). % Addition: Tied to lectures on causal invariance.
+
+\textbf{Solve}
+Use reproducing property for f evaluation:
+$f(x) = \langle f, k(x,\cdot) \rangle$
+Show PSD via Mercer.
+
+\textbf{Counterfactual Trick}: For invariance, compute
+$P(Y|do(X=x'))$ using causal graphs; compare to observational $P(Y|X)$.
 

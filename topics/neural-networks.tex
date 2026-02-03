@@ -2,55 +2,27 @@
 
 \section{Neural Networks: Basics}
 
-$\mathbf{z}^{(l)} = \mathbf{W}^{(l)} \mathbf{a}^{(l-1)} +
-\mathbf{b}^{(l)}$, $\mathbf{a}^{(l)} = \sigma(\mathbf{z}^{(l)})$
-
-\textbf{Sigm.}
-$\sigma(x) = \frac{1}{1 + e^{-x}}$, $\sigma'(x) = \sigma(x)(1 - \sigma(x))$
-
-\textbf{Cross-Entropy loss} $\mathcal{L} = -\sum_i y_i \log(\hat{y}_i)$
-
-\textbf{Backpropagation}:
-Output gradient:
-$\delta^{(L)} = \frac{\partial \mathcal{L}}{\partial
-\mathbf{z}^{(L)}} = (\hat{\mathbf{y}} - \mathbf{y}) \odot
-\sigma'(\mathbf{z}^{(L)})$
+\subsection{Propagation}
+Forward: \(z^l = W^l a^{l-1} + b^l, a^l = \sigma(z^l)\)
 \\
-Hidden:
-$\delta^{(l)} = (\mathbf{W}^{(l+1)T} \delta^{(l+1)}) \odot
-\sigma'(\mathbf{z}^{(l)})$
-
-Weight update: $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} =
-\delta^{(l)} \mathbf{a}^{(l-1)T}$.
-\textit{Trick}: Use chain rule; initialize
-weights $\sim \mathcal{N}(0, \frac{2}{n_{in}})$
-
-\textbf{Optimization Tricks}: Gradient Descent: $\theta \leftarrow \theta -
-\eta \nabla \mathcal{L}$. Momentum: Add velocity term. Adam: Adaptive learning
-rates with moments.
+Backward: \(\delta^L = \nabla_a L \odot \sigma'(z^L), \delta^l =
+(W^{l+1})^T \delta^{l+1} \odot \sigma'(z^l)\)
+\\
+Weight update: \(\frac{\partial L}{\partial W^l} = \delta^l (a^{l-1})^T\)
 
 \section{Attention Mechanisms}
-\textbf{Scaled Dot-Product Attention}
-$\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V})
-= \softmax\left( \frac{\mathbf{Q} \mathbf{K}^T}{\sqrt{d_k}} \right) \mathbf{V}$
-\\
-$\mathbf{Q}$: Queries ($n \times d_k$),
-$\mathbf{K}$: Keys ($m \times d_k$),
-$\mathbf{V}$: Values ($m \times d_v$)
-- \textit{Trick}: Scaling prevents softmax saturation; causal mask for
-decoders (upper triangle $-\infty$).
 
-\textbf{Multi-Head Attention}
-Concat($\text{head}_1,.., \text{head}_h) \mathbf{W}^O$, each head:
-$\text{head}_i = \text{Attention}(\mathbf{Q} \mathbf{W}_i^Q,
-\mathbf{K} \mathbf{W}_i^K, \mathbf{V} \mathbf{W}_i^V)$,
-$h=8$ typical, allow parallel focus on subspaces
-
-\textbf{Self-Attention}:
-$\mathbf{Q} = \mathbf{K} = \mathbf{V} = \mathbf{X} \mathbf{W}$
+\(\text{Attention}(Q, K, V) =
+\softmax\left(\frac{QK^T}{\sqrt{d_k}}\right) V\)
 \\
-(input projection). \textit{Exam Tip}: Captures dependencies
-without recurrence; $O(n^2)$ time.
+Q/K/V: Linear projections of input.
+Scaled for stability (prevents large dot-products).
+
+\subsection{Multi-Head Attention}
+$\text{Concat}(\text{head}_1,.., \text{head}_h) W^O$,
+$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$
+- h heads project to subspaces (e.g., h=8).
+- Advantage: Captures multiple dependency types.
 
 \section{Transformers}
 \textbf{Architecture}: Encoder (self-attn + FFN) stack; Decoder (masked

@@ -32,20 +32,19 @@ Dual: Same as hard-margin but \(0 \leq \alpha_i \leq C\).
 \(C\) trades bias/var. large \(C\) $\to$ hard-margin
 
 %-----------------------------------------------------------------
-\subsection{Kernel Trick}
-Replace \(\mathbf{x}_i^T\mathbf{x}_j\) with \(k(\mathbf{x}_i,
-\mathbf{x}_j)\). Dual becomes:
-\\
-max \(\sum_i \alpha_i - \frac{1}{2} \sum_{i,j} \alpha_i \alpha_j y_i
-y_j k(\mathbf{x}_i, \mathbf{x}_j)\)
+\textbf{Kernel Trick}
+Replace \(\mathbf{x}_i^T\mathbf{x}_j\) with
+\(k(\mathbf{x}_i, \mathbf{x}_j)\)
 
-\begin{itemize}[leftmargin=*,itemsep=0pt]
-  \item Linear: \(k(\mathbf{x}, \mathbf{z}) = \mathbf{x}^T\mathbf{z}\)
+\begin{itemize}[leftmargin=2mm]
   \item Polynomial: \(k(\mathbf{x}, \mathbf{z}) = (\mathbf{x}^T\mathbf{z} +
     c)^d\)
   \item RBF: \(k(\mathbf{x}, \mathbf{z}) = \exp\left( -\frac{\|\mathbf{x} -
     \mathbf{z}\|^2}{2\sigma^2} \right)\)
+  \item Matérn: $k(r) = \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu}
+    r}{\ell}\right)^\nu K_\nu\left(\frac{\sqrt{2\nu} r}{\ell}\right)$ ($\nu=3/2$
+    or $5/2$ for smoothness).
 \end{itemize}
 
-Mercer's condition: Kernel matrix $\ge 0$ (PSD)
+\textbf{Mercer's condition} Kernel matrix $\ge 0$ (PSD)
 

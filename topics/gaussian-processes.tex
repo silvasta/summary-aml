@@ -1,42 +1,35 @@
 \section{Gaussian Processes (GPs)}
-\textbf{Definition} Distribution over functions
+
+Distribution over functions $f(\mathbf{x})$,
+defined by  mean function $m(\mathbf{x}) = 0$ (zero-mean prior)
+and covariance (kernel) function $k(\mathbf{x}, \mathbf{x}')$.
 \\
-$f(\mathbf{x}) \sim \mathcal{GP}(m(\mathbf{x}), k(\mathbf{x}, \mathbf{x}'))$,
-where $m(\cdot)$ is mean,
-$k(\cdot,\cdot)$ is kernel (covariance function)
+For any finite set of inputs
+$\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n]$,
+$\mathbf{f} = [f(\mathbf{x}_1), \dots, f(\mathbf{x}_n)]^T \sim
+\mathcal{N}(\mathbf{0}, \mathbf{K})$,
+where $\mathbf{K}_{ij} = k(\mathbf{x}_i, \mathbf{x}_j)$.
 
-\textbf{Key Kernels}:
-\begin{itemize}[leftmargin=2mm]
-  \item RBF: $k(\mathbf{x}, \mathbf{x}') = \sigma_f^2
-    \exp\left(-\frac{\|\mathbf{x} - \mathbf{x}'\|^2}{2\ell^2}\right)$
-  \item Linear: $k(\mathbf{x}, \mathbf{x}') = \mathbf{x}^T \mathbf{x}' + c$.
-  \item Matérn: $k(r) = \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu}
-    r}{\ell}\right)^\nu K_\nu\left(\frac{\sqrt{2\nu} r}{\ell}\right)$ ($\nu=3/2$
-    or $5/2$ for smoothness).
-\end{itemize}
+Intuition: GPs sample smooth functions; non-parametric,
+infinite-dimensional Bayesian linear regression. Prior: Multivariate
+Gaussian $\mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ with
+$\boldsymbol{\mu} = \mathbf{0}$, $\boldsymbol{\Sigma} = \mathbf{K} +
+\sigma_n^2 \mathbf{I}$ (noisy)
 
-\textbf{GP Regression (Noisy Observations)}:
+Posterior: $\mathbf{y} = \mathbf{f} +
+\boldsymbol{\epsilon}$, $\boldsymbol{\epsilon} \sim
+\mathcal{N}(\mathbf{0}, \sigma_n^2 \mathbf{I})$.
 
-Train data $\mathbf{X}, \mathbf{y}$,
-$y = f(\mathbf{x}) + \epsilon$, $\epsilon \sim \mathcal{N}(0, \sigma_n^2)$
+Joint: $
+\begin{bmatrix} \mathbf{y} \\ f_*
+\end{bmatrix} \sim \mathcal{N} \left( \mathbf{0},
+  \begin{bmatrix} \mathbf{K} + \sigma_n^2 \mathbf{I} & \mathbf{k}_*
+    \\ \mathbf{k}_*^T & k(\mathbf{x}_*, \mathbf{x}_*)
+\end{bmatrix} \right)$
 
-Prior: $\mathbf{f} \sim \mathcal{N}(\mathbf{0}, \mathbf{K})$, where $K_{ij} =
-k(x_i, x_j)$
-
-Posterior predictive:
-$\mathbf{X}_*$,
-$\mathbf{f}_* | \mathbf{y} \sim
-\mathcal{N}(\bar{\mathbf{f}}_*, \cov(\mathbf{f}_*))$
-\begin{align*}
-  \bar{\mathbf{f}}_* &= \mathbf{K}_{*\mathbf{X}} (\mathbf{K}_{\mathbf{XX}} +
-  \sigma_n^2 \mathbf{I})^{-1} \mathbf{y}, \\
-  \cov(\mathbf{f}_*) &= \mathbf{K}_{**} - \mathbf{K}_{*\mathbf{X}}
-  (\mathbf{K}_{\mathbf{XX}} + \sigma_n^2 \mathbf{I})^{-1}
-  \mathbf{K}_{\mathbf{X}*}.
-\end{align*}
-\textbf{Marginal Likelihood}
-$\log p(\mathbf{y} | \mathbf{X}, \theta)=$\\
-$-\frac{1}{2} \mathbf{y}^T (\mathbf{K} + \sigma_n^2
-\mathbf{I})^{-1} \mathbf{y}
-- \frac{1}{2} \log |\mathbf{K} + \sigma_n^2 \mathbf{I}| - \frac{n}{2} \log 2\pi$
+$f_* | \mathbf{X}, \mathbf{y}, \mathbf{x}_* \sim \mathcal{N}(\mu_*,
+\sigma_*^2)$,
+$\mu_* = \mathbf{k}_*^T (\mathbf{K} + \sigma_n^2 \mathbf{I})^{-1} \mathbf{y}$,
+$\sigma_*^2 = k(\mathbf{x}_*, \mathbf{x}_*) - \mathbf{k}_*^T
+(\mathbf{K} + \sigma_n^2 \mathbf{I})^{-1} \mathbf{k}_*$
 

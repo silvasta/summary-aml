@@ -1,22 +1,23 @@
 
+\textbf{Sigm.}
+$\sigma(x) = \frac{1}{1 + e^{-x}}$, $\sigma'(x) = \sigma(x)(1 - \sigma(x))$
+\\
+\textbf{Variance}
+$\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]$
+
+\subsection*{Loss Functions}
+
+\textbf{Logistic} $\ell(y, p) = -y \log p - (1-y) \log(1-p)$
+\\
+\textbf{Cross-Entropy loss} $\mathcal{L} = -\sum_i y_i \log(\hat{y}_i)$
+
+\section{Representations}
+
 \subsection{Empirical Risk Minimization (ERM)}
 $R(f) = \mathbb{E}_{(x,y) \sim \mathcal{D}} [\ell(f(x), y)]$
 $\mathcal{D}$ data distrib. \\
 Empirical Risk:
 $\hat{R}(f) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i), y_i)$
-
-\subsection{Bias-Variance Tradeoff}
-$\mathbb{E}[(y - \hat{y})^2]
-= \text{Bias}^2 + \text{Variance} + \text{Noise}$
-
-Variance:
-$\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]$
-
-\subsection{Basic Loss Functions}
-% TODO: merge all losses from all chapters
-Logistic: $\ell(y, p) = -y \log p - (1-y) \log(1-p)$
-
-\section{Representations}
 
 \textbf{CRLB}
 Lower bound on variance of unbiased estimators $\hat{\theta}$
@@ -24,17 +25,15 @@ of param $\theta$. Assumes regularity: differentiable
 log-likelihood, finite variance.
 \\
 \textbf{Trick}
-CRLB achieved iff estimator is efficient (e.g., MLE in
-exponential families)
+CRLB achieved iff estimator is efficient,
 Multivariate: Use inverse Fisher matrix.
 \\
-Hint for exams: Always check unbiasedness first; compute via Hessian or
+\textbf{Hint for exams} Always check unbiasedness first; compute via Hessian or
 score function.
 
 \subsection{Formulas: Fisher Information}
 
-Param sensitivity in likelihood. $I(\theta) =
-\mathbb{E}\left[ \left( \frac{\partial}{\partial \theta} \log
+$\mathbb{E}\left[ \left( \frac{\partial}{\partial \theta} \log
 p(X|\theta) \right)^2 \right] = -\mathbb{E}\left[ \frac{\partial^2}{\partial
 \theta^2} \log p(X|\theta) \right]$
 
@@ -62,10 +61,8 @@ $\Var(g(\hat{\theta}))
 
 General CRLB: $\Cov(\hat{\theta}) \succeq I(\theta)^{-1}$
 
-Trick:
 Equality if $\hat{\theta} = a(\theta) \cdot s(X) + b(\theta)$,
-where $s(X)$ is sufficient statistic
-(e.g., in Gaussians, sample mean givs CRLB)
+$s(X)$ is suff. stat. (Gauss. sample mean givs CRLB)
 
 \subsection{Calculus Recipes \& Derivations}
 \begin{itemize}
@@ -73,7 +70,7 @@ where $s(X)$ is sufficient statistic
     p(x_i|\theta)$. (2) Take 2nd deriv or score sq. (3) Expectation over
     $p(X|\theta)$.
   \item For representations: Info in feature space: $I_\phi(\theta) =
-    \mathbb{E}[\phi(X)^T \phi(X)]^{-1}$ (e.g., for linear models).
+    \mathbb{E}[\phi(X)^T \phi(X)]^{-1}$
   \item Exam hint: CRLB bounds learning rates (e.g., variance in param
     est. for neural nets).
 \end{itemize}
