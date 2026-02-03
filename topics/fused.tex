@@ -3,12 +3,28 @@ $\sigma(x) = \frac{1}{1 + e^{-x}}$, $\sigma'(x) = \sigma(x)(1 - \sigma(x))$
 \\
 \textbf{Variance}
 $\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]$
-
-\subsection*{Loss Functions}
-
+\\
 \textbf{Logistic} $\ell(y, p) = -y \log p - (1-y) \log(1-p)$
 \\
 \textbf{Cross-Entropy loss} $\mathcal{L} = -\sum_i y_i \log(\hat{y}_i)$
+\\
+\textbf{Sherman-Morrison:}
+$(A+UCV)^{-1} = A^{-1}-A^{-1}U(C^{-1}+VA^{-1}U)^{-1}VA^{-1}$
+\\
+\textbf{Ridge SVD:} $X\beta^r = UD(D^2+\lambda I)^{-1}DU^T Y$.
+\\
+$||\beta^r||^2 = \sum \frac{\gamma_i v_i^2}{(\gamma_i + \lambda)^2}$
+\\
+\textbf{GDA to Logistic:} $w = \Sigma^{-1}(\mu_+ - \mu_-)$, $w_0 =
+\frac{1}{2}\mu_-^T \Sigma^{-1}\mu_- - \frac{1}{2}\mu_+^T \Sigma^{-1}\mu_+$
+\\
+\textbf{Bootstrap:} Prob not picked $\approx 0.368$. $Err^{.632} =
+0.368 \cdot Err_{boot} + 0.632 \cdot Err^{(1)}$
+\\
+\textbf{Robbins-Monro:} $\sum \alpha_n = \infty, \sum \alpha_n^2 < \infty$.
+\\
+\textbf{BIC:} $p(X) \approx p(X|\theta_{ML}) n^{-k/2}$. $BIC = -\ln
+p(X|\theta_{ML}) + \frac{k}{2} \ln n$
 
 \section{Representations}
 
@@ -20,8 +36,7 @@ $\hat{R}(f) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i), y_i)$
 
 \textbf{CRLB}
 Lower bound on variance of unbiased estimators $\hat{\theta}$
-of param $\theta$. Assumes regularity: differentiable
-log-likelihood, finite variance.
+of param $\theta$.
 \\
 \textbf{Trick}
 CRLB achieved iff estimator is efficient,
@@ -86,8 +101,9 @@ $\mathbf{f} = [f(\mathbf{x}_1), \dots, f(\mathbf{x}_n)]^T \sim
 \mathcal{N}(\mathbf{0}, \mathbf{K})$,
 where $\mathbf{K}_{ij} = k(\mathbf{x}_i, \mathbf{x}_j)$.
 
-Intuition: GPs sample smooth functions; non-parametric,
-infinite-dimensional Bayesian linear regression. Prior: Multivariate
+% Intuition: GPs sample smooth functions; non-parametric,
+% infinite-dimensional Bayesian linear regression.
+Prior: Multivariate
 Gaussian $\mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ with
 $\boldsymbol{\mu} = \mathbf{0}$, $\boldsymbol{\Sigma} = \mathbf{K} +
 \sigma_n^2 \mathbf{I}$ (noisy)
@@ -290,7 +306,6 @@ heads.
 
 \section{Information Theory}
 
-\subsection{Key Measures}
 Entropy:
 $H(X) = -\mathbb{E}_{p(x)} [\log p(x)]$
 
@@ -300,7 +315,6 @@ Conditional: $H(Y|X) = H(X,Y) - H(X)$.
 
 Mutual information: $I(X;Y) = H(X) + H(Y) - H(X,Y) = H(X) - H(X|Y) =
 \KL(p(x,y) \| p(x)p(y)) \geq 0$.
-
 Cross-entropy: $H(p,q) = -\mathbb{E}_p [\log q] = H(p) + \KL(p \| q)$.
 
 \textbf{KL divergence} $\KL(p \| q) = \mathbb{E}_p [\log (p/q)] \geq 0$
@@ -486,4 +500,42 @@ $|L(h) - \hat{L}(h)| \leq \sqrt{\frac{2d \ln(em/d) + \ln(2/\delta)}{m}}
     (em/d)^d$.
   \item ERM is PAC if $\mathcal{H}$ has finite VC-dim.
 \end{itemize}
+
+\textbf{Question} For a finite hypothesis class $\mathcal{H}$, how
+many samples $n$ are needed to ensure that with probability
+$1-\delta$, an ERM hypothesis with zero training error has true risk
+$R(h) \leq \epsilon$?
+
+\textbf{Solution}
+We need $P(\exists h \in \mathcal{H}_{bad} \text{ s.t. }
+\hat{R}(h)=0) \leq \delta$.
+Using Union Bound: $|\mathcal{H}_{bad}| (1-\epsilon)^n \leq
+|\mathcal{H}| e^{-n\epsilon} \leq \delta$.
+Take logs: $\ln|\mathcal{H}| - n\epsilon \leq \ln \delta \implies
+n\epsilon \geq \ln|\mathcal{H}| + \ln(1/\delta)$.
+Result: $n \geq \frac{1}{\epsilon} (\ln|\mathcal{H}| + \ln(1/\delta))$.
+
+\textbf{Question}
+Show that $\ln p(x) = ELBO(q) + KL(q(z|x) || p(z|x))$.
+
+\textbf{Solution}
+$\ln p(x) = \int q(z|x) \ln p(x) dz = \int q(z|x) \ln \frac{p(x,
+z)}{p(z|x)} dz = \int q(z|x) \ln \frac{p(x, z)q(z|x)}{q(z|x)p(z|x)} dz$
+$= \int q(z|x) \ln \frac{p(x, z)}{q(z|x)} dz + \int q(z|x) \ln
+\frac{q(z|x)}{p(z|x)} dz = ELBO + KL$.
+
+\textbf{Question}
+Assume $P(Y=1)=P(Y=0)=0.5$. $X|Y=k \sim \mathcal{N}(\mu_k, \sigma^2
+I)$. Show that $P(Y=1|X=x) = \sigma(w^T x + w_0)$.
+
+\textbf{Solution}
+Use Bayes: $P(Y=1|x) = \frac{p(x|1)0.5}{p(x|1)0.5 + p(x|0)0.5} =
+\frac{1}{1 + \exp(-\ln \frac{p(x|1)}{p(x|0)})}$.
+Let $a = \ln \frac{p(x|1)}{p(x|0)} = \ln
+\frac{\exp(-\frac{1}{2\sigma^2}||x-\mu_1||^2)}{\exp(-\frac{1}{2\sigma^2}||x-\mu_0||^2)}
+= -\frac{1}{2\sigma^2} [||x-\mu_1||^2 - ||x-\mu_0||^2]$.
+Expanding terms: $a = \frac{1}{\sigma^2}(\mu_1 - \mu_0)^T x +
+\frac{1}{2\sigma^2}(\mu_0^T\mu_0 - \mu_1^T\mu_1)$.
+Thus $w = \frac{\mu_1 - \mu_0}{\sigma^2}$ and $w_0 =
+\frac{||\mu_0||^2 - ||\mu_1||^2}{2\sigma^2}$.
 
