@@ -1,125 +1,71 @@
-\section{Key ML Concepts }
-
-\subsection{What is Machine Learning?}
-ML enables systems to learn from data without explicit programming. Goals:
-Prediction, inference, decision-making.
-
-\textbf{Types of ML:}
-\begin{itemize}
-  \item \textbf{Supervised}: Labeled data; predict $y$ from $x$ (e.g.,
-    regression, classification).
-  \item \textbf{Unsupervised}: Unlabeled data; find patterns (e.g.,
-    clustering, dimensionality reduction).
-  \item \textbf{Reinforcement}: Agent learns via rewards (e.g., MDPs).
-  \item \textbf{Semi-supervised/Self-supervised}: Mix of labeled/unlabeled.
-\end{itemize}
-
-\textbf{ML Pipeline:} Data collection $\to$ Preprocessing $\to$ Feature
-engineering $\to$ Model selection $\to$ Training $\to$ Evaluation $\to$
-Deployment.
 
 \subsection{Empirical Risk Minimization (ERM)}
-Core principle: Minimize average loss on training data as proxy for true risk.
-
-\textbf{Formulas:}
-\begin{itemize}
-  \item True Risk: $R(f) = \mathbb{E}_{(x,y) \sim \mathcal{D}} [\ell(f(x),
-    y)]$, where $\ell$ is loss function, $\mathcal{D}$ is data distribution.
-  \item Empirical Risk: $\hat{R}(f) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i),
-    y_i)$.
-  \item Goal: $\hat{f} = \argmin_f \hat{R}(f)$ (often with regularization).
-\end{itemize}
-
-\textbf{Trick:} Overfitting occurs when $\hat{R} \ll R$; use validation sets,
-cross-validation.
+$R(f) = \mathbb{E}_{(x,y) \sim \mathcal{D}} [\ell(f(x), y)]$
+$\mathcal{D}$ data distrib. \\
+Empirical Risk:
+$\hat{R}(f) = \frac{1}{n} \sum_{i=1}^n \ell(f(x_i), y_i)$
 
 \subsection{Bias-Variance Tradeoff}
-Decomposes generalization error: $\mathbb{E}[(y - \hat{y})^2] = \text{Bias}^2
-+ \text{Variance} + \text{Noise}$.
+$\mathbb{E}[(y - \hat{y})^2]
+= \text{Bias}^2 + \text{Variance} + \text{Noise}$
 
-\textbf{Formulas:}
-\begin{itemize}
-  \item Bias: $\mathbb{E}[\hat{y}] - y$ (systematic error).
-  \item Variance: $\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]$ (sensitivity
-    to data).
-\end{itemize}
-\emph{Exam Hint:} High bias $\to$ underfitting (simple models); high variance
-$\to$ overfitting (complex models). Regularization reduces variance.
+Variance:
+$\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]$
 
 \subsection{Basic Loss Functions}
-Common in early exams for supervised tasks.
-
-\begin{itemize}
-  \item Regression (MSE): $\ell(y, \hat{y}) = (y - \hat{y})^2$.
-  \item Classification (0-1 Loss): $\ell(y, \hat{y}) = \mathbb{I}(y \neq
-    \hat{y})$.
-  \item Logistic Loss: $\ell(y, p) = -y \log p - (1-y) \log(1-p)$ (for
-    binary).
-\end{itemize}
-
-\textbf{Trick:} For optimization, use surrogates (e.g., hinge loss for SVM
-instead of 0-1).
-
-\subsection{Overfitting \& Regularization}
-Prevent by adding penalty: $\hat{f} = \argmin_f \hat{R}(f) + \lambda
-\Omega(f)$, where $\Omega$ is complexity (e.g., L2: $\|w\|^2$).
-
-\emph{Hint:} Cross-validation for $\lambda$; exams may ask to derive
-regularized ERM.
+% TODO: merge all losses from all chapters
+Logistic: $\ell(y, p) = -y \log p - (1-y) \log(1-p)$
 
 \section{Representations}
 
-\subsection{Key Concepts \& Tricks}
-\begin{itemize}
-  \item \textbf{Representations}: Feature maps $\phi: \mathcal{X} \to
-    \mathbb{R}^d$ for non-linear models (e.g., kernels). Exam trick: Use for
-    bounds in estimation (e.g., info in embedded spaces).
-  \item \textbf{CRLB}: Lower bound on variance of unbiased estimators
-    $\hat{\theta}$ of param $\theta$. Assumes regularity: differentiable
-    log-likelihood, finite variance.
-  \item Trick: CRLB achieved iff estimator is efficient (e.g., MLE in
-    exponential families). Multivariate: Use inverse Fisher matrix.
-  \item Hint for exams: Always check unbiasedness first; compute via Hessian or
-    score function.
-\end{itemize}
+\textbf{CRLB}
+Lower bound on variance of unbiased estimators $\hat{\theta}$
+of param $\theta$. Assumes regularity: differentiable
+log-likelihood, finite variance.
+\\
+\textbf{Trick}
+CRLB achieved iff estimator is efficient (e.g., MLE in
+exponential families)
+Multivariate: Use inverse Fisher matrix.
+\\
+Hint for exams: Always check unbiasedness first; compute via Hessian or
+score function.
 
 \subsection{Formulas: Fisher Information}
-Fisher info measures param sensitivity in likelihood. For scalar $\theta$:
-\[
-  I(\theta) = \mathbb{E}\left[ \left( \frac{\partial}{\partial \theta} \log
-  p(X|\theta) \right)^2 \right] = -\mathbb{E}\left[ \frac{\partial^2}{\partial
-  \theta^2} \log p(X|\theta) \right]
-\]
-Multivariate ($\theta \in \mathbb{R}^k$): Matrix form
-\[
-  [I(\theta)]_{ij} = \mathbb{E}\left[ \frac{\partial \log p}{\partial \theta_i}
-  \frac{\partial \log p}{\partial \theta_j} \right] = -\mathbb{E}\left[
-  \frac{\partial^2 \log p}{\partial \theta_i \partial \theta_j} \right]
-\]
-Trick: For iid samples $X_1,\dots,X_n$, $I_n(\theta) = n I(\theta)$.
 
-\begin{sstTitleBox}[RoyalBlue]{Example: Gaussian $\mathcal{N}(\mu,
-  \sigma^2=1)$}
-  Score: $\frac{\partial \log p}{\partial \mu} = x - \mu$. Fisher: $I(\mu) = 1$.
-\end{sstTitleBox}
+Param sensitivity in likelihood. $I(\theta) =
+\mathbb{E}\left[ \left( \frac{\partial}{\partial \theta} \log
+p(X|\theta) \right)^2 \right] = -\mathbb{E}\left[ \frac{\partial^2}{\partial
+\theta^2} \log p(X|\theta) \right]$
+
+Multivariate ($\theta \in \mathbb{R}^k$): Matrix form
+
+$[I(\theta)]_{ij} = \mathbb{E}\left[ \frac{\partial \log p}{\partial \theta_i}
+\frac{\partial \log p}{\partial \theta_j} \right] = -\mathbb{E}\left[
+  \frac{\partial^2 \log p}{\partial \theta_i \partial \theta_j}
+\right]$
+
+Trick: For iid  $X_1,..,X_n$, $I_n(\theta) = n I(\theta)$
+
+Example: Gaussian $\mathcal{N}(\mu, \sigma^2=1)$
+\\
+Score: $\frac{\partial \log p}{\partial \mu} = x - \mu$. Fisher: $I(\mu) = 1$.
 
 \subsection{Rao-Cramér Lower Bound (CRLB)}
-For unbiased estimator $\hat{\theta}(X)$:
-\[
-  \Var(\hat{\theta}) \geq \frac{1}{I(\theta)} \quad (\text{scalar})
-\]
-Multivariate (for function $g(\theta)$):
-\[
-  \Var(g(\hat{\theta})) \geq \left( \frac{\partial g}{\partial \theta}
-  \right)^T I(\theta)^{-1} \left( \frac{\partial g}{\partial \theta} \right)
-\]
-General CRLB:
-\[
-  \Cov(\hat{\theta}) \succeq I(\theta)^{-1}
-\]
-Trick: Equality if $\hat{\theta} = a(\theta) \cdot s(X) + b(\theta)$, where
-$s(X)$ is sufficient statistic (e.g., in Gaussians, sample mean achieves
-CRLB).
+For unbiased $\hat{\theta}(X)$:
+$\Var(\hat{\theta}) \geq \frac{1}{I(\theta)} \quad (\text{scalar})$
+
+Multiv.
+$\Var(g(\hat{\theta}))
+\geq \left( \frac{\partial g}{\partial \theta} \right)^T I(\theta)^{-1}
+\left( \frac{\partial g}{\partial \theta} \right)$
+
+General CRLB: $\Cov(\hat{\theta}) \succeq I(\theta)^{-1}$
+
+Trick:
+Equality if $\hat{\theta} = a(\theta) \cdot s(X) + b(\theta)$,
+where $s(X)$ is sufficient statistic
+(e.g., in Gaussians, sample mean givs CRLB)
 
 \subsection{Calculus Recipes \& Derivations}
 \begin{itemize}
@@ -128,12 +74,7 @@ CRLB).
     $p(X|\theta)$.
   \item For representations: Info in feature space: $I_\phi(\theta) =
     \mathbb{E}[\phi(X)^T \phi(X)]^{-1}$ (e.g., for linear models).
-  \item Exam hint: In ML, CRLB bounds learning rates (e.g., variance in param
+  \item Exam hint: CRLB bounds learning rates (e.g., variance in param
     est. for neural nets).
 \end{itemize}
-
-\begin{sstOnlyFrame}
-  \textbf{Regularity Conditions}: Support indep. of $\theta$; $\int p(x|\theta)
-  dx =1$ differentiable under integral.
-\end{sstOnlyFrame}
 

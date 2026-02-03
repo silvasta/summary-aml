@@ -1,30 +1,32 @@
-
 \section{Gaussian Processes (GPs)}
-\textbf{Definition}: GP is a distribution over functions $f(\mathbf{x}) \sim
-\mathcal{GP}(m(\mathbf{x}), k(\mathbf{x}, \mathbf{x}'))$, where $m(\cdot)$ is
-mean function (often 0), $k(\cdot,\cdot)$ is kernel (covariance function).
+\textbf{Definition} Distribution over functions
+\\
+$f(\mathbf{x}) \sim \mathcal{GP}(m(\mathbf{x}), k(\mathbf{x}, \mathbf{x}'))$,
+where $m(\cdot)$ is mean,
+$k(\cdot,\cdot)$ is kernel (covariance function)
 
 \textbf{Key Kernels}:
 \begin{itemize}[leftmargin=2mm]
   \item RBF: $k(\mathbf{x}, \mathbf{x}') = \sigma_f^2
     \exp\left(-\frac{\|\mathbf{x} - \mathbf{x}'\|^2}{2\ell^2}\right)$
-    (lengthscale
-    $\ell$, variance $\sigma_f^2$).
   \item Linear: $k(\mathbf{x}, \mathbf{x}') = \mathbf{x}^T \mathbf{x}' + c$.
   \item Matérn: $k(r) = \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu}
     r}{\ell}\right)^\nu K_\nu\left(\frac{\sqrt{2\nu} r}{\ell}\right)$ ($\nu=3/2$
     or $5/2$ for smoothness).
 \end{itemize}
 
-\textbf{GP Regression (Noisy Observations)}: $y = f(\mathbf{x}) + \epsilon$,
-$\epsilon \sim \mathcal{N}(0, \sigma_n^2)$. Training data: $\mathbf{X},
-\mathbf{y}$.
+\textbf{GP Regression (Noisy Observations)}:
+
+Train data $\mathbf{X}, \mathbf{y}$,
+$y = f(\mathbf{x}) + \epsilon$, $\epsilon \sim \mathcal{N}(0, \sigma_n^2)$
 
 Prior: $\mathbf{f} \sim \mathcal{N}(\mathbf{0}, \mathbf{K})$, where $K_{ij} =
-k(x_i, x_j)$.
+k(x_i, x_j)$
 
-Posterior predictive: For test points $\mathbf{X}_*$, $\mathbf{f}_* |
-\mathbf{y} \sim \mathcal{N}(\bar{\mathbf{f}}_*, \cov(\mathbf{f}_*))$,
+Posterior predictive:
+$\mathbf{X}_*$,
+$\mathbf{f}_* | \mathbf{y} \sim
+\mathcal{N}(\bar{\mathbf{f}}_*, \cov(\mathbf{f}_*))$
 \begin{align*}
   \bar{\mathbf{f}}_* &= \mathbf{K}_{*\mathbf{X}} (\mathbf{K}_{\mathbf{XX}} +
   \sigma_n^2 \mathbf{I})^{-1} \mathbf{y}, \\
@@ -32,49 +34,9 @@ Posterior predictive: For test points $\mathbf{X}_*$, $\mathbf{f}_* |
   (\mathbf{K}_{\mathbf{XX}} + \sigma_n^2 \mathbf{I})^{-1}
   \mathbf{K}_{\mathbf{X}*}.
 \end{align*}
-
-\textbf{Marginal Likelihood} (for hyperparams $\theta$): $\log p(\mathbf{y} |
-\mathbf{X}, \theta) = -\frac{1}{2} \mathbf{y}^T (\mathbf{K} + \sigma_n^2
-\mathbf{I})^{-1} \mathbf{y} - \frac{1}{2} \log |\mathbf{K} + \sigma_n^2
-\mathbf{I}| - \frac{n}{2} \log 2\pi$.
-
-\textbf{Tricks/Exam Hints}:
-\begin{itemize}[leftmargin=2mm]
-  \item Cholesky decomp for inversion: Stable for positive-definite
-    $\mathbf{K}$.
-  \item Optimize $\theta$ via gradient descent on log-marginal (derivs w.r.t.
-    $\ell, \sigma_f$).
-  \item GPs for classification: Use logistic/sigmoid + Laplace approx or EP.
-  \item Scalability: Sparse GPs (e.g., FITC) approx large datasets.
-\end{itemize}
-
-\section{Ensembles}
-\textbf{Key Methods}:
-\begin{itemize}[leftmargin=2mm]
-  \item \textbf{Bagging} (Bootstrap Aggregating): Train $M$ models on bootstrap
-    samples, average predictions. Reduces variance.
-  \item \textbf{Random Forest}: Bagging + random feature subsets at splits.
-    Importance: $I(f) = \sum_{\text{nodes}} \Delta \text{impurity} \cdot
-    p(\text{node})$.
-  \item \textbf{Boosting} (e.g., AdaBoost): Sequential, weight misclassified
-    points. Final: $H(\mathbf{x}) = \sign\left(\sum_m \alpha_m
-    h_m(\mathbf{x})\right)$, $\alpha_m = \frac{1}{2} \log \frac{1 -
-    \epsilon_m}{\epsilon_m}$.
-  \item \textbf{Gradient Boosting}: Minimize loss $L = \sum_i l(y_i,
-    F(\mathbf{x}_i))$, update $F_m = F_{m-1} + \nu h_m$, where $h_m$ fits
-    pseudo-residuals $r_{im} = -\frac{\partial l}{\partial
-    F_{m-1}(\mathbf{x}_i)}$.
-\end{itemize}
-
-\textbf{Bias-Variance Tradeoff}: Ensembles reduce variance (bagging) or bias
-(boosting). Error bound for AdaBoost: $\epsilon \leq 2^M \prod_m
-\sqrt{\epsilon_m (1 - \epsilon_m)}$.
-
-\textbf{Tricks/Exam Hints}:
-\begin{itemize}[leftmargin=2mm]
-  \item Diversity: Key to ensembles; measure via correlation of base learners.
-  \item Overfitting: Boosting can overfit; use early stopping or shrinkage $\nu
-    < 1$.
-  \item For proofs: Derive exponential loss minimization for AdaBoost weights.
-\end{itemize}
+\textbf{Marginal Likelihood}
+$\log p(\mathbf{y} | \mathbf{X}, \theta)=$\\
+$-\frac{1}{2} \mathbf{y}^T (\mathbf{K} + \sigma_n^2
+\mathbf{I})^{-1} \mathbf{y}
+- \frac{1}{2} \log |\mathbf{K} + \sigma_n^2 \mathbf{I}| - \frac{n}{2} \log 2\pi$
 

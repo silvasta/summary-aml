@@ -23,7 +23,6 @@
     colback=lightgray,
     colframe=lightgray,
     arc=0mm,
-    % boxrule=.5mm,
     left=0pt,
     bottom=1mm,
     right=0mm,
@@ -34,7 +33,7 @@
     \textbf{Silvan Stadelmann}
     - \selectlanguage{german}{\today}
     \color{white}
-    - v0.1.0
+    - v0.1.1
   }
 \end{tcolorbox}
 
@@ -42,16 +41,13 @@
   {\scriptsize\url{github.com/silvasta/summary-aml}}
 \end{center}
 
-% \begin{adjustbox}{rndcorners=0.5mm,width=71.5mm,height=40mm}
-\begin{adjustbox}{rndcorners=0.5mm,width=71.5mm}
+\begin{adjustbox}{rndcorners=0.5mm,width=\columnwidth}
   \begin{tikzpicture}
-    \node[anchor=south west, inner sep=0]
+    \node[anchor=south, inner sep=0]
     (image) at (0,0)
     {\includegraphics[width=\columnwidth]{title/center-cristal.jpg}};
-    \begin{scope}[x={(image.south east)},y={(image.north west)}]
-      \node[anchor = south west, white, font=\small\robotomono]
-      at (-.5mm,-.5mm) {Created with Grok and Gemini};
-    \end{scope}
+    \node[anchor = south, white, font=\small\robotomono]
+    {Created with Grok and Gemini};
   \end{tikzpicture}
 \end{adjustbox}
 

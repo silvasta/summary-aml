@@ -1,0 +1,39 @@
+
+
+\section{Ensemble Methods}
+
+\subsection{Bagging (Bootstrap Aggregating)}
+Average \(B\) models: \(\hat{f}(\mathbf{x}) = \frac{1}{B}
+\sum_{b=1}^B \hat{f}_b(\mathbf{x})\)
+
+Reduction: Var(\(\hat{f}\)) ≈ \(\frac{1}{B}\) Var if uncorrelated
+
+\textbf{Random Forest}: Bagging + random feature% subsets at splits.
+\\
+Importance
+$I(f) = \sum_{\text{nodes}} \Delta \text{impurity} \cdot p(\text{node})$
+
+\subsection{Boosting}
+
+Sequential, weight misclassified points.
+\\
+Final: $H(\mathbf{x}) = \sign\left(\sum_m \alpha_m
+h_m(\mathbf{x})\right)$, $\alpha_m = \frac{1}{2} \log \frac{1 -
+\epsilon_m}{\epsilon_m}$.
+Reduces bias.
+
+\subsubsection{AdaBoost}
+
+Weights
+\(w_i^{(t+1)} = w_i^{(t)} \exp(-\alpha_t y_i h_t(\mathbf{x}_i))\), normalized.
+\(\alpha_t = \frac{1}{2} \ln \left( \frac{1 - \epsilon_t}{\epsilon_t}
+\right)\), where \(\epsilon_t\) = weighted error.
+
+Error bound: $\epsilon \leq 2^M \prod_m \sqrt{\epsilon_m (1 - \epsilon_m)}$.
+
+\textbf{Gradient Boosting}
+min $L = \sum_i l(y_i, F(\mathbf{x}_i))$,
+update $F_m = F_{m-1} + \nu h_m$,
+where $h_m$ fits pseudo-residuals
+$r_{im} = -\frac{\partial l}{\partial F_{m-1}(\mathbf{x}_i)}$.
+

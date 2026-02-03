@@ -2,92 +2,32 @@
 \section{RL \& Active Learning}
 
 \subsection{Markov Decision Processes (MDPs)}
-MDP: Tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma, \mu_0)$, where
-$\mathcal{S}$ states, $\mathcal{A}$ actions, $P(s'|s,a)$ transition prob.,
-$R(s,a)$ reward, $\gamma \in [0,1)$ discount, $\mu_0$ initial state dist.
 
-\textbf{State-Value Fn:} $V^\pi(s) = \mathbb{E}_\pi \left[ \sum_{t=0}^\infty
-\gamma^t R(s_t, a_t) \mid s_0 = s \right]$.
+$V^\pi(s) = \mathbb{E}_\pi \left[ \sum_{t=0}^\infty
+\gamma^t R(s_t, a_t) \mid s_0 = s \right]$
 
-\textbf{Action-Value Fn:} $Q^\pi(s,a) = \mathbb{E}_\pi \left[
-\sum_{t=0}^\infty \gamma^t R(s_t, a_t) \mid s_0=s, a_0=a \right]$.
+\textbf{Action-value}
+$Q^\pi(s,a) = \mathbb{E}_\pi \left[
+\sum_{t=0}^\infty \gamma^t R(s_t, a_t) \mid s_0=s, a_0=a \right]$
 
-\textbf{Advantage Fn:} $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$.
+\textbf{Advantage} $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s)$.
 
 \textbf{Bellman Expectation:} $V^\pi(s) = \sum_a \pi(a|s) \sum_{s',r}
 P(s',r|s,a) [r + \gamma V^\pi(s')]$.
 
 \textbf{Bellman Optimality:} $V^*(s) = \max_a \sum_{s',r} P(s',r|s,a) [r +
-\gamma V^*(s')]$. Trick: Optimal policy $\pi^*(s) = \argmax_a Q^*(s,a)$.
+\gamma V^*(s')]$
 
 \textbf{Discounted Return:} $G_t = \sum_{k=t}^\infty \gamma^{k-t} R_{k+1}$.
-Exam hint: Use for infinite-horizon problems; $\gamma<1$ ensures convergence.
 
-\subsection{Value \& Policy Iteration}
-\textbf{Value Iteration (VI):} Update $V(s) \leftarrow \max_a
-\mathbb{E}[R(s,a) + \gamma V(s')]$. Converges to $V^*$ (contraction mapping,
-Banach fixed-point thm). Trick: Stop when $\max_s |V_{new}(s) - V_{old}(s)| <
-\epsilon (1-\gamma)/\gamma$.
-
-\textbf{Policy Iteration (PI):} (1) Eval: Solve $V^\pi = (I - \gamma
-P^\pi)^{-1} R^\pi$. (2) Improve: $\pi'(s) = \argmax_a Q^\pi(s,a)$. Faster than
-VI for small $\mathcal{A}$.
-
-Exam trick: PI is exact eval + greedy; VI is approx. eval + greedy. Derive
-from Bellman.
-
-\subsection{Model-Free RL (TD Methods)}
-\textbf{TD(0) Update:} $V(s) \leftarrow V(s) + \alpha [r + \gamma V(s') -
-V(s)]$ (TD error: $r + \gamma V(s') - V(s)$).
-
-\textbf{Q-Learning (Off-Policy):} $Q(s,a) \leftarrow Q(s,a) + \alpha [r +
-\gamma \max_{a'} Q(s',a') - Q(s,a)]$. $\epsilon$-greedy exploration.
-
-\textbf{SARSA (On-Policy):} $Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma
-Q(s',a') - Q(s,a)]$.
-
-Trick: Q-Learning converges to optimal even with suboptimal policy; SARSA to
-policy's Q. Exam: Compare bias/variance.
-
-\subsection{Policy Gradients \& Actor-Critic}
 \textbf{Policy Gradient Thm:} $\nabla_\theta J(\theta) = \mathbb{E}_\pi
-[\nabla_\theta \log \pi_\theta(a|s) Q^\pi(s,a)]$. Update: $\theta \leftarrow
-\theta + \alpha \nabla_\theta J$.
+[\nabla_\theta \log \pi_\theta(a|s) Q^\pi(s,a)]$
 
-\textbf{REINFORCE:} Monte-Carlo est. $ \hat{\nabla} J = \sum_t \nabla_\theta
-\log \pi(a_t|s_t) G_t$. Variance reduction: Subtract baseline $b(s_t) \approx
-V(s_t)$.
+\textbf{REINFORCE:}
+$ \hat{\nabla} J = \sum_t \nabla_\theta \log \pi(a_t|s_t) G_t$.
+Var. reduct. Subtract baseline $b(s_t) \approx
+V(s_t)$
 
-\textbf{Actor-Critic:} Actor updates policy; Critic est. $V$ or $Q$ via TD.
-A2C/A3C: Advantage $A = r + \gamma V(s') - V(s)$.
-
-Trick: Softmax policy $\pi(a|s) = \exp(h_\theta(s,a)) / \sum_{a'}
-\exp(h_\theta(s,a'))$; gradient $\nabla \log \pi = \psi(s,a) - \sum_{a'}
-\pi(a'|s) \psi(s,a')$ (compat. features $\psi$).
-
-Exam calc: Derive policy grad from $\frac{\partial}{\partial \theta}
-\mathbb{E}[R] = \mathbb{E}[R \nabla \log p(R|\theta)]$ (score fn trick).
-
-\subsection{Active Learning}
-Pool-based: Unlabeled pool $\mathcal{U}$, labeled $\mathcal{L}$. Query
-strategy selects $x^* \in \mathcal{U}$ to label.
-
-\textbf{Uncertainty Sampling:} Query $x^* = \argmax_x H(y|x,\mathcal{L})$ or
-$\argmax_x [1 - P(\hat{y}|x)]$ (least confident). For binary: $\argmax_x
-\min(P(y=1|x), P(y=0|x))$.
-
-\textbf{Query-by-Committee:} Train committee of models; query max disagreement
-(vote entropy: $H = -\sum_y V(y)/C \log V(y)/C$, $V(y)$ votes for $y$).
-
-\textbf{Expected Model Change:} Query $\argmax_x \mathbb{E}_{y|x} [||\nabla
-\ell(y, f(x))||]$.
-
-Trick: Balances exploration (uncertainty) vs. exploitation. Exam: Compare to
-random sampling; derive entropy for multi-class.
-
-\textbf{Bayesian Active Learning:} Use GP or BNN for $p(y|x)$; query max info
-gain $I(y;x) = H(y) - \mathbb{E}_{p(x)}[H(y|x)]$.
-
-Exam hint: Active learning reduces labeling cost; focus on info-theoretic
-justifications.
+\textbf{Actor-Critic:}
+$A = r + \gamma V(s') - V(s)$.
 

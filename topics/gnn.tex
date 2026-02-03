@@ -21,34 +21,19 @@ Layer: $\mathbf{H}^{(l+1)} = \sigma(\hat{\mathbf{A}} \mathbf{H}^{(l)}
 Spectral view: Approximation of graph Laplacian $\mathbf{L} = \mathbf{D} -
 \mathbf{A}$, normalized $\hat{\mathbf{L}} = \mathbf{I} - \hat{\mathbf{A}}$.
 
-Over-smoothing: Deep GCNs make representations similar; mitigate with residual
-connections or normalization.
-
 \subsection{Graph Attention Network (GAT)}
 Attention: $\alpha_{ij} = \softmax_j \left( \text{LeakyReLU} \left(
-\mathbf{a}^\top [\mathbf{W} h_i \| \mathbf{W} h_j] \right) \right)$.
+\mathbf{a}^\top [\mathbf{W} h_i \| \mathbf{W} h_j] \right) \right)$
 
 Update: $h_i^{(l+1)} = \sigma \left( \sum_{j \in \mathcal{N}(i) \cup i}
 \alpha_{ij} \mathbf{W} h_j^{(l)} \right)$. Multi-head: Concat or average
 heads.
 
-\subsection{Tasks \& Pooling}
-Node classification: Predict labels from node embeddings.
-
-Graph classification: Pool via readout $r = f(\{h_v | v \in V\})$ (e.g., mean,
-max, sum). Hierarchical pooling (e.g., DiffPool).
-
-Link prediction: Score edges with $s(u,v) = h_u^\top h_v$ or MLP on
-concatenated embeddings.
-
-Tricks: Use skip connections for deep GNNs; normalize features; handle
-heterophily with signed messages or higher-order neighbors.
-
 \section{Information Theory}
 
 \subsection{Key Measures}
-Entropy: $H(X) = -\mathbb{E}_{p(x)} [\log p(x)] = -\sum p(x) \log p(x)$
-(discrete); continuous: $-\int p(x) \log p(x) \, dx$.
+Entropy:
+$H(X) = -\mathbb{E}_{p(x)} [\log p(x)]$
 
 Joint entropy: $H(X,Y) = -\mathbb{E}[\log p(x,y)]$.
 
@@ -59,22 +44,9 @@ Mutual information: $I(X;Y) = H(X) + H(Y) - H(X,Y) = H(X) - H(X|Y) =
 
 Cross-entropy: $H(p,q) = -\mathbb{E}_p [\log q] = H(p) + \KL(p \| q)$.
 
-KL divergence: $\KL(p \| q) = \mathbb{E}_p [\log (p/q)] \geq 0$, not
-symmetric.
-
-\subsection{Applications in ML/GNNs}
-Variational bound: ELBO in VAEs uses $\KL(q \| p)$.
-
-InfoMax in GNNs: Maximize $I(\mathbf{h}_v; \mathbf{h}_G)$ for unsupervised
-learning (e.g., InfoGraph).
-
-Entropy regularization: In RL/policy, add $-H(\pi)$ to encourage exploration.
-
-Chain rule: $H(X_1,\dots,X_n) = \sum H(X_i | X_{<i})$.
+\textbf{KL divergence} $\KL(p \| q) = \mathbb{E}_p [\log (p/q)] \geq 0$
 
 Tricks: Jensen-Shannon divergence for stability:
 $\text{JSD}(p \| q) = \frac{1}{2} \KL(p \| m) + \frac{1}{2} \KL(q \|
 m)$, $m=(p+q)/2$.
-
-In GNNs: Use MI to measure information flow between layers or nodes.
 

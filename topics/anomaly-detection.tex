@@ -1,69 +1,36 @@
 
-% topics/anomaly-detection.tex
 \section{Anomaly Detection}
 
-\subsection{Key Concepts \& Definitions}
-Anomaly (outlier): Data point deviating significantly from normal patterns.
-Types:
-\begin{itemize}[leftmargin=*,noitemsep]
-  \item \textbf{Unsupervised}: No labels; e.g., assume most data normal.
-  \item \textbf{Semi-supervised}: Train on normal data only (one-class).
-  \item \textbf{Supervised}: Labeled anomalies (rare due to imbalance).
-\end{itemize}
-Challenges: High dims (curse of dimensionality), imbalance, thresholding.
-
-\textbf{Tricks}: Normalize data; use dimensionality reduction (e.g., PCA)
-pre-detection; evaluate with AUC-PR over AUC-ROC for imbalance.
-
 \subsection{Statistical Methods}
-\textbf{Z-Score}: Score $z_i = \frac{x_i - \mu}{\sigma}$. Anomaly if $|z_i| >
-\theta$ (e.g., 3).
+\textbf{Z-Score}:
+Score $z_i = \frac{x_i - \mu}{\sigma}$. Anomaly if $|z_i| > \theta$
 
-\textbf{Mahalanobis Distance}: Accounts for covariance.
-\[
-  D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1}
-  (\mathbf{x} - \boldsymbol{\mu})}
-\]
-Anomaly if $D_M > \theta$ (e.g., from $\chi^2$ dist.).
+\textbf{Mahalanobis Distance} Accounts for cov.\\
+$D_M(\mathbf{x}) = \sqrt{(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1}
+(\mathbf{x} - \boldsymbol{\mu})}$
+\\
+Anomaly if $D_M > \theta$ (e.g.,
+from $\chi^2$ dist.).
 
 \subsection{Proximity-Based Methods}
-\textbf{k-NN Outlier Score}: Distance to $k$-th nearest neighbor
-$d_k(\mathbf{x})$. Anomaly if $d_k > \theta$.
-
-\textbf{Local Outlier Factor (LOF)}: Compares local density.
-\begin{enumerate}[leftmargin=*,noitemsep]
-  \item Reachability dist.: $\text{rd}_k(p,o) = \max(d_k(o), d(p,o))$.
-  \item Local reach. density: $\text{lrd}_k(p) = \left( \frac{1}{N_k(p)} \sum_{o
-    \in N_k(p)} \text{rd}_k(p,o) \right)^{-1}$.
-  \item LOF: $\text{LOF}_k(p) = \frac{1}{N_k(p)} \sum_{o \in N_k(p)}
-    \frac{\text{lrd}_k(o)}{\text{lrd}_k(p)}$.
-\end{enumerate}
-Anomaly if LOF $> 1$ (much lower local density).
 
 \subsection{Isolation Forest}
-Ensemble of isolation trees: Randomly partition until isolation.
+Randomly partition until isolation.
 \textbf{Anomaly Score}: $s(\mathbf{x}, n) =
 2^{-\frac{E(h(\mathbf{x}))}{c(n)}}$, where $h(\mathbf{x})$ = path length,
 $E(\cdot)$ = avg over trees, $c(n) = 2H(n-1) - \frac{2(n-1)}{n}$ ($H$ =
 harmonic number).
-Anomaly if $s \approx 0.5$ (normal) or $s \to 1$ (anomaly). Trick: Works well
-in high dims; depth limit for efficiency.
+Anomaly if $s \approx 0.5$ (normal) or $s \to 1$ (anomaly).
+Works well in high dims.
 
 \subsection{One-Class SVM}
-Hyperplane maximizing margin from origin (normal data).
-\[
-  \min_{\mathbf{w}, \xi_i, \rho} \frac{1}{2} \|\mathbf{w}\|^2 + \frac{1}{\nu n}
-  \sum_i \xi_i - \rho
-\]
-s.t. $\mathbf{w}^T \phi(\mathbf{x}_i) \geq \rho - \xi_i$. Decision:
-$f(\mathbf{x}) = \text{sign}(\mathbf{w}^T \phi(\mathbf{x}) - \rho)$. $\nu \in
-(0,1]$ bounds outlier fraction.
-
-\subsection{Autoencoder-Based}
-Train on normal data; anomaly score = reconstruction error $||\mathbf{x} -
-\hat{\mathbf{x}}||^2$. Threshold via validation set.
-
-\subsection{Evaluation}
-\textbf{Anomaly Score Thresholding}: Use quantiles or ROC curve. Metrics:
-Precision@K, AUC-PR (for imbalance).
+Hyperplane maximizing margin from origin
+$\min_{\mathbf{w}, \xi_i, \rho} \frac{1}{2} \|\mathbf{w}\|^2 +
+\frac{1}{\nu n} \sum_i \xi_i - \rho$
+\\
+s.t. $\mathbf{w}^T \phi(\mathbf{x}_i) \geq \rho - \xi_i$
+\\
+Decision:
+$f(\mathbf{x}) = \text{sign}(\mathbf{w}^T \phi(\mathbf{x}) - \rho)$.
+$\nu \in (0,1]$
 

@@ -1,0 +1,51 @@
+% svm-ensemble.tex
+%-----------------------------------------------------------------
+\section{Support Vector Machines (SVMs)}
+%-----------------------------------------------------------------
+\subsection{Hard-Margin SVM (Linearly Separable)}
+Primal:
+min \(\frac{1}{2} \|\mathbf{w}\|^2\)
+s.t. \(y_i (\mathbf{w}^T \mathbf{x}_i + b) \geq 1 \ \forall i\)
+\\
+Dual:
+max \(\sum_i \alpha_i - \frac{1}{2} \sum_{i,j} \alpha_i \alpha_j y_i
+y_j \mathbf{x}_i^T\mathbf{x}_j\)
+s.t. \(\alpha_i \geq 0\), \(\sum_i \alpha_i y_i = 0\)
+Margin: \(\gamma = \frac{2}{\|\mathbf{w}\|}\)
+
+Decision: \(f(\mathbf{x}) = \sign\left( \sum_i \alpha_i y_i \mathbf{x}_i^T
+\mathbf{x} + b \right)\)
+
+Support vectors: Points w. \(\alpha_i > 0\) (on margin)
+
+%-----------------------------------------------------------------
+\subsection{Soft-Margin SVM}
+Primal:
+min \(\frac{1}{2} \|\mathbf{w}\|^2 + C \sum_i \xi_i\)
+\\
+s.t. \(y_i (\mathbf{w}^T\mathbf{x}_i + b) \geq 1 - \xi_i\), \(\xi_i \geq 0\)
+
+Hinge loss: \(\ell(y, \hat{y}) = \max(0, 1 - y \hat{y})\).
+
+Dual: Same as hard-margin but \(0 \leq \alpha_i \leq C\).
+
+\(C\) trades bias/var. large \(C\) $\to$ hard-margin
+
+%-----------------------------------------------------------------
+\subsection{Kernel Trick}
+Replace \(\mathbf{x}_i^T\mathbf{x}_j\) with \(k(\mathbf{x}_i,
+\mathbf{x}_j)\). Dual becomes:
+\\
+max \(\sum_i \alpha_i - \frac{1}{2} \sum_{i,j} \alpha_i \alpha_j y_i
+y_j k(\mathbf{x}_i, \mathbf{x}_j)\)
+
+\begin{itemize}[leftmargin=*,itemsep=0pt]
+  \item Linear: \(k(\mathbf{x}, \mathbf{z}) = \mathbf{x}^T\mathbf{z}\)
+  \item Polynomial: \(k(\mathbf{x}, \mathbf{z}) = (\mathbf{x}^T\mathbf{z} +
+    c)^d\)
+  \item RBF: \(k(\mathbf{x}, \mathbf{z}) = \exp\left( -\frac{\|\mathbf{x} -
+    \mathbf{z}\|^2}{2\sigma^2} \right)\)
+\end{itemize}
+
+Mercer's condition: Kernel matrix $\ge 0$ (PSD)
+

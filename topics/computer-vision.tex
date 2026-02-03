@@ -5,43 +5,23 @@
 \textbf{Key Concepts:} Parameter sharing, local connectivity, translation
 invariance. Architectures: LeNet (simple), AlexNet (deep with ReLU/dropout).
 
-\textbf{Discrete Convolution (2D):} For input $I$ (size $H \times W \times
-C$), kernel $K$ (size $k_h \times k_w \times C$),
-\[
-  O[i,j] = \sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} \sum_{c=1}^{C} I[i+m, j+n, c]
-  \cdot K[m,n,c] + b
-\]
+\textbf{Discrete Convolution (2D)}
+
+Input  $I$: ($H, W , C$),
+Kernel $K$: ($k_h \times k_w \times C$)
+
+$O[i,j] =
+\sum_{m=0}^{k_h-1} \sum_{n=0}^{k_w-1} \sum_{c=1}^{C}
+I[i+m, j+n, c] \cdot K[m,n,c] + b$
+
 Output size: $\lfloor (H - k_h + 2p)/s \rfloor + 1$, where $p=$ padding, $s=$
 stride.
 
 \textbf{Pooling (Max/Avg):} Reduces dims, e.g., max-pool: $O[i,j] = \max_{m,n}
 I[i \cdot s + m, j \cdot s + n]$.
 
-\textbf{Activation Functions:} ReLU: $f(x) = \max(0,x)$; Softmax for
-classification: $\sigma(z_i) = e^{z_i} / \sum e^{z_j}$.
-
-\subsection{Training \& Optimization}
-\textbf{Loss Functions:} Cross-entropy for multi-class: $\mathcal{L} = -\sum
-y_i \log \hat{y}_i$.
-
 \textbf{Backpropagation in CNNs:} Gradients via chain rule. For conv layer:
 - Weight grad: $\frac{\partial \mathcal{L}}{\partial K[m,n,c]} = \sum_{i,j}
 \frac{\partial \mathcal{L}}{\partial O[i,j]} \cdot I[i+m,j+n,c]$.
 - Input grad: Rotate kernel 180° and convolve with output grad.
-
-\textbf{Tricks:} Batch norm: Normalize activations $\hat{x} = (x -
-\mu)/\sqrt{\sigma^2 + \epsilon}$, then $\gamma \hat{x} + \beta$. Dropout:
-Randomly zero neurons during training (prob $p$).
-
-\subsection{Applications \& Metrics}
-\textbf{Classification:} Output via FC layer + softmax.
-
-\textbf{Object Detection Basics:} Bounding boxes; IoU: $\text{IoU} =
-\frac{\text{Area}(A \cap B)}{\text{Area}(A \cup B)}$.
-
-\textbf{Segmentation:} Pixel-wise classification; U-Net: Encoder-decoder with
-skip connections.
-
-\textbf{Exam Hints:} Derive output shapes; explain why CNNs > FC nets (fewer
-params: $O(k^2 C)$ vs. $O(HWC)$).
 
